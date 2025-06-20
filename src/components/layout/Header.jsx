@@ -29,6 +29,9 @@ export default function Header() {
           <button aria-label="Cart">
             🛒
           </button>
+           <button aria-label="Cart">
+            ❤️
+          </button>
           <button aria-label="Profile">
             👤
           </button>

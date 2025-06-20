@@ -1,26 +1,40 @@
 export default function PromoBanner() {
   return (
-<div className="w-3/4 bg-black text-white rounded-lg overflow-hidden flex items-center relative px-10 py-8">
-<div className="flex-1 space-y-4">
-  <p className="text-sm text-gray-300">iPhone 14 Series</p>
-  <h2 className="text-4xl font-bold leading-tight">Up to 10% off Voucher</h2>
-  <a href="#" className="inline-block mt-4 text-sm font-semibold border-white hover:text-gray-300">
-     Shop Now →
-  </a>
-</div>
+  <div className="relative rounded-lg overflow-hidden w-full h-[300px] md:h-[400px]">
+      {/* Картинка на заднем фоне */}
+      <img
+        src="/hero/iphone.png"
+        alt="iPhone"
+        className="w-full h-full object-cover"
+      />
 
-<img 
-src="../../../imeges/iphone.png"
-alt="Iphone"
-className="w-1/2 object-contain"
-/>
+      {/* Текст поверх */}
+      <div className="absolute inset-0 flex flex-col justify-center items-start px-6 md:px-10 text-white bg-black/40">
+        <p className="text-sm text-gray-200">iPhone 14 Series</p>
+        <h2 className="text-3xl md:text-5xl font-bold leading-tight max-w-[400px]">
+          Up to 10% off Voucher
+        </h2>
+        <a
+          href="#"
+          className="inline-block mt-4 text-sm font-semibold border-b border-white hover:text-gray-300"
+        >
+          Shop Now →
+        </a>
+      </div>
 
-<div className="absolute bottom-4 left-10 flex-grow-2">
-  {[0, 1, 2, 3, 4,].map((i) => (
-    <span key={i} className={`w-2 h-2 rounded-full ${i === 2 ? 'bg-red-500' : 'bg-gray-400'}`}></span>
-  ))}
-</div>
-
-</div>
+      {/* Индикаторы (внизу по центру) */}
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
+        {[0, 1, 2, 3, 4].map((i) => (
+    <span
+      key={i}
+      className={`w-2 h-2 rounded-full transition ${
+        i === 2
+          ? 'bg-red-500 shadow-[0_0_0_2px_#d1d5db]' // red point с серой "обводкой"
+          : 'bg-gray-400'
+      }`}
+    ></span>
+        ))}
+      </div>
+    </div>
   );
 }

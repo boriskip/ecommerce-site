@@ -11,9 +11,9 @@ export default function HeroLeftMenu() {
     "Health & Beauty",
   ];
 return (
-    <ul className="w-1/4 border-r pr-4 space-y-2 text-sm font-medium">
+    <ul className="w-1/4 pr-4 space-y-2 text-sm font-medium">
       {categories.map((item, idx) => (
-        <li key={idx} className="flex justify-between items-center hover:text-indigo-600 cursor-pointer">
+        <li key={idx} className="flex justify-between items-center hover:text-indigo-600 cursor-pointer whitespace-nowrap">
           {item}
           {(item.includes('Fashion')) && <span>➔</span>}
         </li>

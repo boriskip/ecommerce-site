@@ -4,6 +4,7 @@ import viteLogo from '/vite.svg';
 import TopBar from './components/layout/TopBar';
 import Header from './components/layout/Header';
 import HeroSection from './components/sections/hero/HeroSection';
+import FlashSalesSection from './components/sections/flash-sales/FlashSalesSection';
 // import './App.css'
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
       <Header />
       <main className="p-4">
       <HeroSection />
+      <FlashSalesSection />
       </main>
     </>
   );
