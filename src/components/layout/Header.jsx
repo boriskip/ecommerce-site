@@ -1,42 +1,67 @@
-import React from 'react'
+import { useState } from 'react';
+import { Menu, X, Heart, ShoppingCart } from 'lucide-react';
 
 export default function Header() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   return (
-    <header className="bg-white shadow-md">
-      <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-        
-        {/* Логотип */}
-        <div className="text-2xl font-bold text-gray-900">SHOP.CO</div>
+    <header className="bg-white shadow-md sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+        {/* Лого */}
+        <div className="text-xl font-bold">MyShop</div>
 
-        {/* Меню */}
-        <nav className="hidden md:flex space-x-6">
-          <a href="#" className="text-gray-700 hover:text-black">Home</a>
-          <a href="#" className="text-gray-700 hover:text-black">Contact</a>
-          <a href="#" className="text-gray-700 hover:text-black">About</a>
-          <a href="#" className="text-gray-700 hover:text-black">Sing Up</a>
+        {/* Поиск — показывается всегда, адаптируется по ширине */}
+        <div className="flex-1 mx-4">
+          <input
+            type="text"
+            placeholder="Search products..."
+            className="w-full px-4 py-2 border rounded-md text-sm"
+          />
+        </div>
+
+        {/* Навигация (десктоп) */}
+        <nav className="hidden md:flex items-center gap-6 text-sm">
+          <a href="#" className="block hover:text-red-500">Home</a>
+          <a href="#" className="block hover:text-red-500">Contact</a>
+          <a href="#" className="block hover:text-red-500">About</a>
+          <a href="#" className="block hover:text-red-500">Sing Up</a>
         </nav>
 
-        {/* Иконки */}
-        <div className="flex items-center space-x-4">
-          {/* <button aria-label="Search">
-            🔍
-          </button> */}
-          <input
-  type="text"
-  placeholder="Was looking you For?"
-  className="hidden md:block px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring focus:ring-indigo-200 text-sm w-64"
-/>
-          <button aria-label="Cart">
-            🛒
-          </button>
-           <button aria-label="Cart">
-            ❤️
-          </button>
-          <button aria-label="Profile">
-            👤
-          </button>
-        </div>
+
+
+        {/* Иконка бургер (мобилка) */}
+        <button
+          className="md:hidden"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label="Toggle Menu"
+        >
+          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+
+        <div className="flex items-center gap-4 ml-4">
+  <button className="relative group" aria-label="Wishlist">
+    <Heart className="w-5 h-5 text-gray-600 group-hover:text-red-500" />
+    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">2</span>
+  </button>
+
+  <button className="relative group" aria-label="Cart">
+    <ShoppingCart className="w-5 h-5 text-gray-600 group-hover:text-red-500" />
+    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">3</span>
+  </button>
+</div>
       </div>
+
+
+
+      {/* Выпадающее меню (мобилка) */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden bg-white border-t px-4 py-4 space-y-2 shadow-md">
+          <a href="#" className="block hover:text-red-500">Home</a>
+          <a href="#" className="block hover:text-red-500">Contact</a>
+          <a href="#" className="block hover:text-red-500">About</a>
+          <a href="#" className="block hover:text-red-500">Sing Up</a>
+        </div>
+      )}
+
     </header>
   );
 }

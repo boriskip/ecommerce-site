@@ -4,7 +4,6 @@ import LeftMenu from './HeroLeftMenu';
 import PromoBanner from './PromoBanner';
 
 export default function HeroSection() {
-    // const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
 
