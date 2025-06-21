@@ -192,6 +192,8 @@ const [sliderRef, slider] = useKeenSlider({
           </button>
         </div>
       </div>
+      <hr className="mt-10 border-gray-300" />
+      
     </section>
   );
 }

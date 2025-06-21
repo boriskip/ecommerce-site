@@ -26,8 +26,10 @@ export default function HeroSection() {
   }, [isOpen]);
 
     return (
-    <section className="relative grid grid-cols-1 md:grid-cols-12 gap-4 p-4">
-        
+    <section className="bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+
+          <div className="relative grid grid-cols-1 md:grid-cols-12 gap-4 py-6">
       {/* Mobile: Кнопка показать меню */}
       <div className="md:hidden mb-2">
   
@@ -56,6 +58,8 @@ export default function HeroSection() {
       {/* Баннер */}
       <div className="col-span-1 md:col-span-9">
         <PromoBanner />
+      </div>
+      </div>
       </div>
     </section>
     );

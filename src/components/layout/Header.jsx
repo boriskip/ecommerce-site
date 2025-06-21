@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import logo from '../../../public/logo/logo1.svg';
 import { Menu, X, Heart, ShoppingCart } from 'lucide-react';
 
 export default function Header() {
@@ -7,9 +8,9 @@ export default function Header() {
     <header className="bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
         {/* Лого */}
-        <div className="text-xl font-bold">MyShop</div>
-
-        {/* Поиск — показывается всегда, адаптируется по ширине */}
+         <img src={logo} alt="Logo" className="h-10 w-auto" />
+   
+   
         <div className="flex-1 mx-4">
           <input
             type="text"

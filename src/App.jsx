@@ -5,7 +5,7 @@ import TopBar from './components/layout/TopBar';
 import Header from './components/layout/Header';
 import HeroSection from './components/sections/hero/HeroSection';
 import FlashSalesSection from './components/sections/flash-sales/FlashSalesSection';
-// import './App.css'
+import CategorySliderSection from './components/sections/categories/CategorySliderSection'; 
 
 function App() {
   const [count, setCount] = useState(0)
@@ -17,6 +17,7 @@ function App() {
       <main className="p-4">
       <HeroSection />
       <FlashSalesSection />
+      <CategorySliderSection />
       </main>
     </>
   );
