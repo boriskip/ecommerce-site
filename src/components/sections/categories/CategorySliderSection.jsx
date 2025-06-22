@@ -26,8 +26,7 @@ export default function CategorySliderSection() {
 
   return (
     <section className="max-w-7xl mx-auto px-4 py-10">
-      <p className="text-sm text-red-500 font-medium mb-1">Categories</p>
-
+      <p className="text-red-500 font-semibold text-sm">Categories</p>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Browse By Category</h2>
         <div className="flex gap-2">

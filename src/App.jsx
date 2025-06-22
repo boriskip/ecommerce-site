@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
 import TopBar from './components/layout/TopBar';
 import Header from './components/layout/Header';
 import HeroSection from './components/sections/hero/HeroSection';
 import FlashSalesSection from './components/sections/flash-sales/FlashSalesSection';
 import CategorySliderSection from './components/sections/categories/CategorySliderSection'; 
+import BestSellingProducts from './components/sections/best-selling/BestSellingProducts';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -18,6 +17,7 @@ function App() {
       <HeroSection />
       <FlashSalesSection />
       <CategorySliderSection />
+      <BestSellingProducts />
       </main>
     </>
   );

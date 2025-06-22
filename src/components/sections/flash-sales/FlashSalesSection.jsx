@@ -3,6 +3,8 @@ import { useKeenSlider } from "keen-slider/react";
 import "keen-slider/keen-slider.min.css";
 import FlashTimer from './FlashTimer';
 import FlashProductCard from './FlashProductCard';
+import { ArrowLeft, ArrowRight } from "lucide-react";
+
 
 export default function FlashSalesSection() {
 const [currentSlide, setCurrentSlide] = useState(0);
@@ -127,29 +129,29 @@ const [sliderRef, slider] = useKeenSlider({
     <FlashTimer />
   </div>
 
-  {/* Стрелки — только на md и выше */}
   {loaded && slider && (
-    <div className="hidden md:flex gap-2">
-      {currentSlide > 0 && (
-        <button
-          onClick={() => slider.current?.prev()}
-          className="w-8 h-8 rounded-full flex items-center justify-center text-white bg-gray-200 hover:bg-gray-300"
-        >
-          ←
-        </button>
-      )}
-      {currentSlide <
+  <div className="hidden md:flex gap-2">
+    {currentSlide > 0 && (
+      <button
+        onClick={() => slider.current?.prev()}
+        className="w-8 h-8 rounded-full flex items-center justify-center text-black bg-gray-200 hover:bg-gray-300"
+      >
+        <ArrowLeft size={18} />
+      </button>
+    )}
+    {currentSlide <
       slider.current.track.details.slides.length -
         slider.current.options.slides.perView && (
       <button
         onClick={() => slider.current?.next()}
-        className="w-8 h-8 rounded-full flex items-center justify-center text-black bg-gray-200 hover:hover:bg-gray-300"
+        className="w-8 h-8 rounded-full flex items-center justify-center text-black bg-gray-200 hover:bg-gray-300"
       >
-        →
+        <ArrowRight size={18} />
       </button>
     )}
   </div>
 )}
+
         </div>
 
         {/* slider */}
@@ -161,15 +163,14 @@ const [sliderRef, slider] = useKeenSlider({
           ))}
         </div>
 
-{/* Стрелки — только на мобильных (до md) */}
 {loaded && slider && (
   <div className="flex justify-center gap-4 mt-4 md:hidden">
     {currentSlide > 0 && (
       <button
         onClick={() => slider.current?.prev()}
-        className="w-10 h-10 rounded-full flex items-center justify-center  text-black bg-gray-200 hover:hover:bg-gray-300"
+        className="w-10 h-10 rounded-full flex items-center justify-center text-black bg-gray-200 hover:bg-gray-300"
       >
-        ←
+        <ArrowLeft size={20} />
       </button>
     )}
     {currentSlide <
@@ -177,9 +178,9 @@ const [sliderRef, slider] = useKeenSlider({
         slider.current.options.slides.perView && (
       <button
         onClick={() => slider.current?.next()}
-        className="w-10 h-10 rounded-full flex items-center justify-center  text-black bg-gray-200 hover:hover:bg-gray-300"
+        className="w-10 h-10 rounded-full flex items-center justify-center text-black bg-gray-200 hover:bg-gray-300"
       >
-        →
+        <ArrowRight size={20} />
       </button>
     )}
   </div>
