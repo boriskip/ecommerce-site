@@ -133,6 +133,7 @@ updateItemsToShow();
           </div>
         ))}
       </div>
+      
       <hr className="mt-10 border-gray-300" />
       <BestSellingBanner />
     </section>

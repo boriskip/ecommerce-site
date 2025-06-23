@@ -1,4 +1,4 @@
-import { Heart, Eye } from "lucide-react";
+import { Heart, Eye , Star } from "lucide-react";
 
 export default function FlashProductCard({ product }) {
   return (
@@ -19,6 +19,7 @@ export default function FlashProductCard({ product }) {
 
 <div className="relative">
       <img src={`/flash-sales/${product.image}`} alt={product.title} className="w-full h-50 object-cover mb-4" />
+      
             <div className="absolute bottom-0 left-0 w-full bg-black text-white text-sm text-center py-2 opacity-0 group-hover:opacity-100 transition duration-300">
         Add To Cart
       </div>
