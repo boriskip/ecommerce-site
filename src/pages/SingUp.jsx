@@ -5,7 +5,7 @@ export default function SingUp() {
 <section className="max-w-7xl mx-auto px-4 py-12 grid grid-col-1 md:grid-cols-2 gap-10 items-center">
     <div>
         <img
-        src="public/dl.beatsnoop 1.png"
+        src="public/singup-in/dl.beatsnoop 1.png"
         alt="Shoppung with phone"
         className="w-full h-auto object-contain"
         />
@@ -43,7 +43,7 @@ export default function SingUp() {
             
             className="border py-2 rounded flex items-center justify-center gap-2 hover:bg-gray-100">
                 <img
-    src="public/google.png" 
+    src="public/singup-in/google.png" 
     alt="Google icon"
     className="w-55 h-5"
   />
