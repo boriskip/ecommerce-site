@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Heart, Eye } from "lucide-react";
+import { Heart, Eye, Star, StarOff } from "lucide-react";
 import BestSellingBanner from './BestSellingBanner';
 
 const products = [
@@ -9,6 +9,7 @@ const products = [
     price: 260,
     oldPrice: 360,
     rating: 5,
+    reviews: 99,
   },
   {
     title: "Gucci duffle bag",
@@ -16,6 +17,7 @@ const products = [
     price: 960,
     oldPrice: 1160,
     rating: 5,
+    reviews: 99,
   },
   {
     title: "RGB liquid CPU Cooler",
@@ -23,6 +25,7 @@ const products = [
     price: 160,
     oldPrice: 170,
     rating: 5,
+    reviews: 99,
   },
   {
     title: "Small BookSelf",
@@ -30,13 +33,15 @@ const products = [
     price: 360,
     oldPrice: null,
     rating: 5,
+    reviews: 99,
   },
-    {
+  {
     title: "The north coat",
     image: "/best-seling/coat.png",
     price: 260,
     oldPrice: 360,
     rating: 5,
+    reviews: 99,
   },
   {
     title: "Gucci duffle bag",
@@ -44,6 +49,7 @@ const products = [
     price: 960,
     oldPrice: 1160,
     rating: 5,
+    reviews: 99,
   },
   {
     title: "RGB liquid CPU Cooler",
@@ -51,6 +57,7 @@ const products = [
     price: 160,
     oldPrice: 170,
     rating: 5,
+    reviews: 99,
   },
   {
     title: "Small BookSelf",
@@ -58,6 +65,7 @@ const products = [
     price: 360,
     oldPrice: null,
     rating: 5,
+    reviews: 99,
   },
 ];
 
@@ -65,7 +73,7 @@ export default function BestSellingProducts() {
   const [showAll, setShowAll] = useState(false);
   const [itemsToShow, setItemsToShow] = useState(4);
 
-    useEffect(() => {
+  useEffect(() => {
     const updateItemsToShow = () => {
       if (window.innerWidth < 768) {
         setItemsToShow(2);
@@ -74,14 +82,14 @@ export default function BestSellingProducts() {
       }
     };
 
-updateItemsToShow();
+    updateItemsToShow();
     window.addEventListener("resize", updateItemsToShow);
     return () => window.removeEventListener("resize", updateItemsToShow);
   }, []);
 
   const visibleProducts = showAll ? products : products.slice(0, itemsToShow);
 
-    return (
+  return (
     <section className="max-w-7xl mx-auto px-4 py-12">
       <div className="flex justify-between items-center mb-6">
         <div>
@@ -129,13 +137,24 @@ updateItemsToShow();
                 </span>
               )}
             </div>
-            <div className="text-yellow-400 text-sm">★★★★★ <span className="text-gray-500 text-xs">(65)</span></div>
+
+            <div className="flex items-center text-xs mt-2 text-yellow-500">
+              {[...Array(5)].map((_, i) =>
+                i < Math.floor(product.rating) ? (
+                  <Star key={i} size={14} className="fill-yellow-500 stroke-yellow-500" />
+                ) : (
+                  <StarOff key={i} size={14} className="stroke-yellow-500" />
+                )
+              )}
+              <span className="text-gray-600 ml-1">({product.reviews})</span>
+            </div>
+
           </div>
         ))}
       </div>
-      
+
       <hr className="mt-10 border-gray-300" />
       <BestSellingBanner />
     </section>
-    );
+  );
 }

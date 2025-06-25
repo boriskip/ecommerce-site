@@ -1,7 +1,8 @@
 import React from "react";
 import { Eye, ShoppingCart } from "lucide-react";
+import { Link } from "react-router-dom";
 
-export default function ProductCard({ title, price, oldPrice, image }) {
+export default function ProductCard({ id, title, price, oldPrice, image }) {
   return (
     <div className="border rounded-md p-4 relative group">
       <button className="absolute top-2 right-2 text-gray-400 hover:text-red-500">

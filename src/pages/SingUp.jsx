@@ -6,7 +6,7 @@ export default function SingUp() {
     <div>
         <img
         src="public/singup-in/dl.beatsnoop 1.png"
-        alt="Shoppung with phone"
+        alt="Shopping with phone"
         className="w-full h-auto object-contain"
         />
     </div>

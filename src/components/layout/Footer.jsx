@@ -1,5 +1,6 @@
-import { Mail, Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
+import { Mail } from "lucide-react";
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
@@ -35,11 +36,31 @@ export default function Footer() {
         <div>
           <h3 className="text-lg font-semibold mb-2">Account</h3>
           <ul className="text-sm space-y-1">
-            <li>My Account</li>
-            <li>Login / Register</li>
-            <li>Cart</li>
-            <li>Wishlist</li>
-            <li>Shop</li>
+            <li>
+              <Link to="/account/profile" className="flex items-center gap-2 hover:text-red-500">
+                Manage My Account
+              </Link>
+            </li>
+            <li>
+              <Link to="/login" className="hover:text-red-500">
+                Login / Register
+              </Link>
+            </li>
+            <li>
+              <Link to="/cart" className="hover:text-red-500">
+                Cart
+              </Link>
+            </li>
+            <li>
+              <Link to="/wishlist" className="hover:text-red-500">
+                Wishlist
+              </Link>
+            </li>
+            <li>
+              <Link to="/" className="hover:text-red-500">
+                Shop
+              </Link>
+            </li>
           </ul>
         </div>
 
@@ -50,7 +71,11 @@ export default function Footer() {
             <li>Privacy Policy</li>
             <li>Terms Of Use</li>
             <li>FAQ</li>
-            <li>Contact</li>
+            <li>
+              <Link to="/contact" className="hover:text-red-500">
+                Contact
+              </Link>
+            </li>
           </ul>
         </div>
 
@@ -66,20 +91,20 @@ export default function Footer() {
             </div>
           </div>
 
-<div className="flex gap-4 mt-4">
-  <a href="#" aria-label="Facebook">
-    <FaFacebook className="w-5 h-5 text-white hover:text-gray-400" />
-  </a>
-  <a href="#" aria-label="Twitter">
-    <FaTwitter className="w-5 h-5 text-white hover:text-gray-400" />
-  </a>
-  <a href="#" aria-label="Instagram">
-    <FaInstagram className="w-5 h-5 text-white hover:text-gray-400" />
-  </a>
-  <a href="#" aria-label="LinkedIn">
-    <FaLinkedin className="w-5 h-5 text-white hover:text-gray-400" />
-  </a>
-</div>
+          <div className="flex gap-4 mt-4">
+            <a href="#" aria-label="Facebook">
+              <FaFacebook className="w-5 h-5 text-white hover:text-gray-400" />
+            </a>
+            <a href="#" aria-label="Twitter">
+              <FaTwitter className="w-5 h-5 text-white hover:text-gray-400" />
+            </a>
+            <a href="#" aria-label="Instagram">
+              <FaInstagram className="w-5 h-5 text-white hover:text-gray-400" />
+            </a>
+            <a href="#" aria-label="LinkedIn">
+              <FaLinkedin className="w-5 h-5 text-white hover:text-gray-400" />
+            </a>
+          </div>
         </div>
       </div>
 
