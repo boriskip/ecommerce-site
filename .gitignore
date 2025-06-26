@@ -16,6 +16,7 @@ node_modules/
 dist/
 dist-ssr/
 *.local
+/frontend/dist/
 
 # Testing
 coverage/
@@ -38,3 +39,11 @@ Thumbs.db
 .env.local
 .env.*.local
 
+# Node.js
+/frontend/node_modules/
+
+# Laravel backend
+/backend/vendor/
+/frontend/dist/
+backend/.env
+/backend/storage/
