@@ -20,8 +20,10 @@ import ProductDetails from "../pages/ProductDetails.jsx";
 import NotFound from '../pages/NotFound';
 import AdminLayout from "../layouts/AdminLayout.jsx";
 import AdminLogin from "../components/Admin/AdminLogin.jsx";
+import ProtectedRoute from '../components/ProtectedRoute';
+import AdminDashboard from "../components/Admin/dashboard/AdminDashboard.jsx";
 
-export default function RouterView() {
+export default function RouterView({ user, setUser }) {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
@@ -49,11 +51,17 @@ export default function RouterView() {
 
 
       <Route path="/admin/*" element={<AdminLayout />}>
-        <Route path="login" element={<AdminLogin />} />
-        {/* тут можно ещё другие admin pages */}
+        <Route path="login" element={<AdminLogin setUser={setUser} />} />
+
+        <Route
+          path="dashboard"
+          element={
+            <ProtectedRoute isAuthenticated={user !== null}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
       </Route>
-
-
     </Routes>
   );
 }
