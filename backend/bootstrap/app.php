@@ -11,14 +11,16 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->web(append: [
-            \App\Http\Middleware\HandleInertiaRequests::class,
-            \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
+    ->withMiddleware(function (Middleware $middleware) {
+        // ЭТОТ БЛОК КОДА НУЖНО ДОБАВИТЬ:
+        // Он добавляет все необходимые middleware для работы сессий
+        // в группу 'api', что решит ошибку "Session store not set".
+        $middleware->api(prepend: [
+           \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+            \Illuminate\Session\Middleware\StartSession::class,
+            \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class,
         ]);
-
-        //
     })
-    ->withExceptions(function (Exceptions $exceptions): void {
+    ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();

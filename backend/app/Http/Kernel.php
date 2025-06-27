@@ -6,20 +6,8 @@ use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
 {
-    /**
-     * Глобальные HTTP middleware.
-     */
-    protected $middleware = [
-        \Illuminate\Http\Middleware\HandleCors::class,
-        \App\Http\Middleware\TrustProxies::class,
-        \Illuminate\Http\Middleware\ValidatePostSize::class,
-        \App\Http\Middleware\TrimStrings::class,
-        \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-    ];
+    // ... (секция $middleware остается как есть) ...
 
-    /**
-     * Группы middleware для маршрутов.
-     */
     protected $middlewareGroups = [
         'web' => [
             \App\Http\Middleware\EncryptCookies::class,
@@ -30,9 +18,9 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
+        // ГРУППА API ДОЛЖНА ВЫГЛЯДЕТЬ ТАК (почти пустая):
         'api' => [
-            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            \Illuminate\Routing\Middleware\ThrottleRequests::class,
+            'throttle:api', // Оставляем только ограничение запросов
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
@@ -44,5 +32,6 @@ class Kernel extends HttpKernel
         'auth' => \App\Http\Middleware\Authenticate::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
     ];
 }
