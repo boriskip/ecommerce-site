@@ -1,67 +1,13 @@
 import { useState, useEffect } from "react";
 import { ArrowLeft, ArrowRight, Heart, Eye, Star, StarOff } from "lucide-react";
-const products = [
-  {
-    title: "Breed Dry Dog Food",
-    image: "public/products/dogmeal.png",
-    price: 100,
-    rating: 5,
-    reviews: 35,
-  },
-  {
-    title: "CANON EOS DSIR Camera",
-    image: "/public/products/retrophoto.png",
-    price: 360,
-    rating: 5,
-    reviews: 95,
-  },
-  {
-    title: "ASUS FHD Gaming Laptop",
-    image: "public/products/notebook.png",
-    price: 700,
-    rating: 5,
-    reviews: 325,
-  },
-  {
-    title: "Curology Product Set",
-    image: "public/products/crem.png",
-    price: 500,
-    rating: 5,
-    reviews: 145,
-  },
-  {
-    title: "Kids Electric Car",
-    image: "public/products/car.png",
-    price: 860,
-    rating: 5,
-    reviews: 35,
-  },
-  {
-    title: "Jr. Zoom Socer Cleats",
-    image: "/public/products/sportshos.png",
-    price: 260,
-    rating: 5,
-    reviews: 95,
-  },
-  {
-    title: "GP11 Shooter USB Gamepad",
-    image: "public/products/gamepad.png",
-    price: 99,
-    rating: 5,
-    reviews: 325,
-  },
-  {
-    title: "Quilted Satin Jacket",
-    image: "public/products/jacke.png",
-    price: 320,
-    rating: 5,
-    reviews: 145,
-  },
-];
+import axiosInstance from "../../../utils/axiosInstance";
+import ProductCard from '../../cards/ProductCard';
+
 
 export default function ExploreProductsSection() {
   const [showAll, setShowAll] = useState(false);
   const [itemsToShow, setItemsToShow] = useState(4);
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const updateItemsToShow = () => {
@@ -76,6 +22,17 @@ export default function ExploreProductsSection() {
     window.addEventListener("resize", updateItemsToShow);
     return () => window.removeEventListener("resize", updateItemsToShow);
   }, []);
+
+  useEffect(() => {
+    axiosInstance.get("/api/products")
+      .then((res) => {
+        setProducts(res.data);
+      })
+      .catch((err) => {
+        console.error("Ошибка при загрузке продуктов:", err);
+      });
+  }, []);
+
 
   return (
     <section className="max-w-7xl mx-auto px-4 py-12">
@@ -95,6 +52,19 @@ export default function ExploreProductsSection() {
         </div>
       </div>
 
+      {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {products.map((product) => (
+          <ProductCard
+            key={product.id}
+            id={product.id}
+            title={product.title}
+            price={product.price}
+            oldPrice={product.old_price}
+            image={product.image}
+          />
+        ))}
+      </div> */}
+
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
         {(showAll ? products : products.slice(0, itemsToShow)).map((product, index) => (
           <div
@@ -111,7 +81,7 @@ export default function ExploreProductsSection() {
               </div>
             </div>
             {/* Icons */}
-            <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition">
+            < div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition" >
 
               <button className="bg-white p-1 rounded-full border"><Heart size={16} /></button>
 
@@ -141,8 +111,9 @@ export default function ExploreProductsSection() {
             </div>
 
           </div>
-        ))}
-      </div>
+        ))
+        }
+      </div >
       <div className="text-center mt-10">
 
         <button
@@ -152,6 +123,6 @@ export default function ExploreProductsSection() {
           {showAll ? "Show Less" : "View All"}
         </button>
       </div>
-    </section>
+    </section >
   )
 }

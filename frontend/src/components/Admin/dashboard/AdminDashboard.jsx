@@ -1,6 +1,7 @@
 // src/components/Admin/dashboard/AdminDashboard.jsx
 
 import React from 'react';
+import ProductCard from '../../cards/ProductCard';
 
 export default function AdminDashboard() {
     return (
@@ -10,9 +11,7 @@ export default function AdminDashboard() {
 
             {/* Примеры контента */}
             <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                <div className="p-4 border rounded shadow">📦 Заказы: 123</div>
-                <div className="p-4 border rounded shadow">👥 Пользователи: 45</div>
-                <div className="p-4 border rounded shadow">🛒 Продукты: 76</div>
+                <ProductCard />
             </div>
         </div>
     );
