@@ -18,11 +18,15 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'admin@example.com',
             'password' => Hash::make('password123'),
+            'is_admin' => true,
         ]);
+
+       User::factory(5)->create();
 
         // Запуск сидера для продуктов
         $this->call([
             ProductSeeder::class,
+            ReviewSeeder::class,
         ]);
     }
 }

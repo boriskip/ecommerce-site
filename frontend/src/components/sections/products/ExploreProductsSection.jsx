@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { ArrowLeft, ArrowRight, Heart, Eye, Star, StarOff } from "lucide-react";
-import axiosInstance from "../../../utils/axiosInstance";
 import ProductCard from '../../cards/ProductCard';
-
+import axios from "axios";
 
 export default function ExploreProductsSection() {
   const [showAll, setShowAll] = useState(false);
@@ -24,7 +23,7 @@ export default function ExploreProductsSection() {
   }, []);
 
   useEffect(() => {
-    axiosInstance.get("/api/products")
+    axios.get("/api/products")
       .then((res) => {
         setProducts(res.data);
       })

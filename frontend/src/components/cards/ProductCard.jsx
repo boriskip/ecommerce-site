@@ -2,7 +2,7 @@ import React from "react";
 import { Eye, ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 
-export default function ProductCard({ id, title, price, oldPrice, image }) {
+export default function ProductCard({ id, title, price, oldPrice, image, onEdit, isAdmin = false }) {
   return (
     <div className="border rounded-md p-4 relative group">
       <button className="absolute top-2 right-2 text-gray-400 hover:text-red-500">
@@ -11,7 +11,7 @@ export default function ProductCard({ id, title, price, oldPrice, image }) {
 
       {/* Фото */}
       <img
-        src={image}
+        src={`/storage/${image}`}
         alt={title}
         className="w-full h-40 object-contain mb-4"
       />
@@ -25,10 +25,22 @@ export default function ProductCard({ id, title, price, oldPrice, image }) {
         {oldPrice && <span className="line-through text-gray-400">${oldPrice}</span>}
       </div>
 
-      {/* Кнопка "Add to Cart" */}
-      <button className="bg-black text-white py-1.5 w-full flex items-center justify-center gap-2 hover:bg-gray-800">
-        <ShoppingCart size={16} /> Add To Cart
-      </button>
+      {/* Только для пользователей */}
+      {!isAdmin && (
+        <button className="bg-black text-white py-1.5 w-full flex items-center justify-center gap-2 hover:bg-gray-800">
+          <ShoppingCart size={16} /> Add To Cart
+        </button>
+      )}
+
+      {/* Только для админа */}
+      {isAdmin && onEdit && (
+        <button
+          onClick={onEdit}
+          className="mt-2 bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
+        >
+          ✏️ Редактировать
+        </button>
+      )}
     </div>
   );
 }
