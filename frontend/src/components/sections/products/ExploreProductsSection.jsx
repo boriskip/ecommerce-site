@@ -51,18 +51,7 @@ export default function ExploreProductsSection() {
         </div>
       </div>
 
-      {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {products.map((product) => (
-          <ProductCard
-            key={product.id}
-            id={product.id}
-            title={product.title}
-            price={product.price}
-            oldPrice={product.old_price}
-            image={product.image}
-          />
-        ))}
-      </div> */}
+
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
         {(showAll ? products : products.slice(0, itemsToShow)).map((product, index) => (
@@ -71,7 +60,7 @@ export default function ExploreProductsSection() {
             className="border rounded-md p-4 relative group hover:shadow-md transition">
             <div className="relative">
               <img
-                src={product.image}
+                src={`/storage/${product.image}`}
                 alt={product.title}
                 className="mx-auto h-32 ob` mb-4" />
 
@@ -93,20 +82,17 @@ export default function ExploreProductsSection() {
                 ${product.price}
               </span>
             </div>
-            {/* <div className="text-yellow-400 text-sm">
-              {'★'.repeat(product.rating)}
-              <span className="text-gray-500 text-xs">({product.reviews})</span>
-            </div> */}
 
             <div className="flex items-center text-xs mt-2 text-yellow-500">
               {[...Array(5)].map((_, i) =>
-                i < Math.floor(product.rating) ? (
+                i < Math.floor(product.reviews_avg_rating) ? (
                   <Star key={i} size={14} className="fill-yellow-500 stroke-yellow-500" />
                 ) : (
                   <StarOff key={i} size={14} className="stroke-yellow-500" />
                 )
               )}
-              <span className="text-gray-600 ml-1">({product.reviews})</span>
+              <span className="text-gray-600 ml-1">({product.reviews_count || 0})</span>
+
             </div>
 
           </div>

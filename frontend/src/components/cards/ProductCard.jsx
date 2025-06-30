@@ -2,7 +2,7 @@ import React from "react";
 import { Eye, ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 
-export default function ProductCard({ id, title, price, oldPrice, image, onEdit, isAdmin = false }) {
+export default function ProductCard({ id, title, price, oldPrice, image, rating, reviewsCount, onEdit, onDelete, isAdmin = false }) {
   return (
     <div className="border rounded-md p-4 relative group">
       <button className="absolute top-2 right-2 text-gray-400 hover:text-red-500">
@@ -33,13 +33,22 @@ export default function ProductCard({ id, title, price, oldPrice, image, onEdit,
       )}
 
       {/* Только для админа */}
-      {isAdmin && onEdit && (
-        <button
-          onClick={onEdit}
-          className="mt-2 bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
-        >
-          ✏️ Редактировать
-        </button>
+      {isAdmin && (
+        <div className="flex flex-col gap-2 mt-2">
+          <button
+            onClick={onEdit}
+            className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
+          >
+            ✏️ Редактировать
+          </button>
+
+          <button
+            onClick={onDelete}
+            className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+          >
+            🗑️ Удалить
+          </button>
+        </div>
       )}
     </div>
   );

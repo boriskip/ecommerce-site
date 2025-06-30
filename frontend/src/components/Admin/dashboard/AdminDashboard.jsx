@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 // import { Plus } from "lucide-react";
 import axiosInstance from '@/utils/axiosInstance';
 import ProductCard from '@/components/cards/ProductCard';
-// import EditProductModal from '@/components/Admin/modals/EditProductModal';
+import EditProductModal from '@/components/Admin/modals/EditProductModal';
 import AddProductModal from '../modals/AddProductModal';
 
 
@@ -12,7 +12,7 @@ export default function AdminDashboard() {
     const [editingProduct, setEditingProduct] = useState(null);
     const [showAddModal, setShowAddModal] = useState(false);
 
-    useEffect(() => {
+    const fetchProducts = () => {
         axiosInstance.get("/api/products")
             .then((res) => {
                 setProducts(res.data);
@@ -20,7 +20,25 @@ export default function AdminDashboard() {
             .catch((err) => {
                 console.error("Ошибка при загрузке продуктов:", err);
             });
+    };
+
+    // Загружаем продукты при первом рендере
+    useEffect(() => {
+        fetchProducts();
     }, []);
+
+    const handleDelete = async (id) => {
+        const confirmDelete = window.confirm("Вы уверены, что хотите удалить товар?");
+        if (!confirmDelete) return;
+
+        try {
+            await axiosInstance.delete(`/api/products/${id}`);
+            setProducts((prev) => prev.filter((p) => p.id !== id));
+        } catch (error) {
+            console.error("Ошибка при удалении товара:", error);
+            alert("Не удалось удалить товар.");
+        }
+    };
 
     const visibleProducts = showAll ? products : products.slice(0, 6);
 
@@ -50,6 +68,7 @@ export default function AdminDashboard() {
                         oldPrice={product.old_price}
                         image={product.image}
                         onEdit={() => setEditingProduct(product)}
+                        onDelete={() => handleDelete(product.id)}
                         isAdmin={true}
                     />
                 ))}
@@ -76,12 +95,13 @@ export default function AdminDashboard() {
                 />
             )}
             {/* Модальное окно редактирования */}
-            {/* {editingProduct && (
+            {editingProduct && (
                 <EditProductModal
                     product={editingProduct}
                     onClose={() => setEditingProduct(null)}
+                    onUpdated={fetchProducts}
                 />
-            )} */}
+            )}
         </div>
     );
 }
