@@ -2,19 +2,24 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ProductController;
-use App\Models\Product;
+use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
-Route::post('/login', [LoginController::class, 'login']);
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// 📌 Public routes
+Route::middleware('guest')->group(function () {
+    Route::post('/register', [RegisteredUserController::class, 'store']);
+    Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 });
-Route::get('/products', [ProductController::class, 'index']);// Read
-Route::post('/products', [ProductController::class, 'store']);// Create
-Route::put('/products/{id}', [ProductController::class, 'update']); 
-Route::delete('/products/{id}', [ProductController::class, 'destroy']); 
 
-// Route::get('/products', function () {
-//     return Product::all();
-// });
+// 🔒 Authenticated routes
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy']);
+    Route::get('/user', fn(Request $request) => $request->user());
+
+    // 🛍 Products CRUD
+    Route::get('/products', [ProductController::class, 'index']);
+    Route::post('/products', [ProductController::class, 'store']);
+    Route::put('/products/{id}', [ProductController::class, 'update']);
+    Route::delete('/products/{id}', [ProductController::class, 'destroy']);
+});
