@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axiosInstance from '@/utils/axiosInstance';
+import axiosPrivate from '../../../api/axiosPrivate';
 
 export default function AddProductModal({ onClose, onProductAdded }) {
     const [title, setTitle] = useState('');
@@ -19,7 +19,7 @@ export default function AddProductModal({ onClose, onProductAdded }) {
         formData.append('image', image); // это файл, не строка
 
         try {
-            const response = await axiosInstance.post('/api/products', formData, {
+            const response = await axiosPrivate.post('/api/products', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

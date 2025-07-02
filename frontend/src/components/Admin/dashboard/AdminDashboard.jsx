@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 // import { Plus } from "lucide-react";
-import axiosInstance from '@/utils/axiosInstance';
+import axiosPrivate from '../../../api/axiosPrivate';
 import ProductCard from '@/components/cards/ProductCard';
 import EditProductModal from '@/components/Admin/modals/EditProductModal';
 import AddProductModal from '../modals/AddProductModal';
@@ -13,7 +13,7 @@ export default function AdminDashboard() {
     const [showAddModal, setShowAddModal] = useState(false);
 
     const fetchProducts = () => {
-        axiosInstance.get("/api/products")
+        axiosPrivate.get("/api/products")
             .then((res) => {
                 setProducts(res.data);
             })
@@ -32,7 +32,7 @@ export default function AdminDashboard() {
         if (!confirmDelete) return;
 
         try {
-            await axiosInstance.delete(`/api/products/${id}`);
+            await axiosPrivate.delete(`/api/products/${id}`);
             setProducts((prev) => prev.filter((p) => p.id !== id));
         } catch (error) {
             console.error("Ошибка при удалении товара:", error);

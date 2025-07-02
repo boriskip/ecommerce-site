@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axiosInstance from '@/utils/axiosInstance';
+import axiosPrivate from "../../../api/axiosPrivate";
 
 export default function EditProductModal({ product, onClose, onUpdated }) {
     const [title, setTitle] = useState(product.title);
@@ -18,7 +18,7 @@ export default function EditProductModal({ product, onClose, onUpdated }) {
             formData.append("image", imageFile); // здесь image — файл
         }
         try {
-            const response = await axiosInstance.post(`/api/products/${product.id}?_method=PUT`, formData, {
+            const response = await axiosPrivate.post(`/api/products/${product.id}?_method=PUT`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                     "X-HTTP-Method-Override": "PUT",

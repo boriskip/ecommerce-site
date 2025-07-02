@@ -1,11 +1,52 @@
 // import { Link } from "lucide-react";
 import { Link } from 'react-router-dom';
-import React from "react";
+import { useEffect, useState } from 'react';
 import { MdImageSearch } from "react-icons/md";
+import axiosPrivate from '../api/axiosPrivate';
 
 export default function Cart() {
-    return (
-  <section className="max-w-7xl mx-auto px-4 py-12">
+  const [cartItems, setCartItems] = useState([]);
+
+  useEffect(() => {
+    axiosPrivate.get('/api/cart')
+      .then((res) => {
+        if (!Array.isArray(res.data)) {
+          console.warn('⚠️ Неверный формат данных:', res.data);
+          return;
+        }
+
+        console.log('🟢 Корзина:', res.data);
+        setCartItems(res.data);
+      })
+      .catch((err) => {
+        console.error('🔴 Ошибка загрузки корзины:', err);
+        setCartItems([]);
+      });
+  }, []);
+
+  // // Добавление товара в корзину
+  // const addToCart = async (productId) => {
+  //   try {
+  //     const response = await axiosPrivate.post('/api/cart', { productId });
+  //     setCartItems(response.data);
+  //   } catch (error) {
+  //     console.error('Cart adding error:', error);
+  //   }
+  // };
+
+  // // Удаление товара из корзины
+  // const removeFromCart = async (productId) => {
+  //   try {
+  //     const response = await axiosPrivate.delete(`/api/cart/${productId}`);
+  //     setCartItems(response.data);
+  //   } catch (error) {
+  //     console.error('Error wen deliting cart:', error);
+  //   }
+  // };
+
+
+  return (
+    <section className="max-w-7xl mx-auto px-4 py-12">
       {/* Хлебные крошки */}
       <nav className="text-sm text-gray-500 mb-8">
         <span className="text-black">Home</span> / <span>Cart</span>
@@ -23,38 +64,39 @@ export default function Cart() {
             </tr>
           </thead>
           <tbody>
-            {/* Пример товара */}
-            <tr className="bg-white shadow rounded">
-              <td className="flex items-center gap-4 p-4">
-                <button className="text-red-500 text-xl">✕</button>
-                <img src="/wishlist/rbg-liquid.png" alt="Monitor" className="w-16 h-16 object-contain" />
-                <span>LCD Monitor</span>
-              </td>
-              <td>$650</td>
-              <td>
-                <select className="border rounded p-1">
-                  <option>1</option>
-                  <option>2</option>
-                </select>
-              </td>
-              <td>$650</td>
-            </tr>
-
-            <tr className="bg-white shadow rounded">
-              <td className="flex items-center gap-4 p-4">
-                <button className="text-red-500 text-xl">✕</button>
-                <img src="/for-you/havit1.png" alt="Gamepad" className="w-16 h-16 object-contain" />
-                <span>HI Gamepad</span>
-              </td>
-              <td>$550</td>
-              <td>
-                <select className="border rounded p-1">
-                  <option>1</option>
-                  <option>2</option>
-                </select>
-              </td>
-              <td>$1100</td>
-            </tr>
+            {cartItems.map((item) => (
+              <tr key={item.id} className="bg-white shadow rounded">
+                <td className="flex items-center gap-4 p-4">
+                  <button
+                    onClick={() => removeFromCart(item.id)}
+                    className="text-red-500 text-xl"
+                  >
+                    ✕
+                  </button>
+                  <img
+                    src={`/storage/${item.product.image}`}
+                    alt={item.product.title}
+                    className="w-16 h-16 object-contain"
+                  />
+                  <span>{item.product.title}</span>
+                </td>
+                <td>${item.product.price}</td>
+                <td>
+                  <select
+                    className="border rounded p-1"
+                    value={item.quantity}
+                    onChange={(e) => updateCartItem(item.id, e.target.value)}
+                  >
+                    {[...Array(10).keys()].map((i) => (
+                      <option key={i + 1} value={i + 1}>
+                        {i + 1}
+                      </option>
+                    ))}
+                  </select>
+                </td>
+                <td>${(item.product.price * item.quantity).toFixed(2)}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
@@ -99,12 +141,12 @@ export default function Cart() {
             <span>$1750</span>
           </div>
           <Link to="/checkout"
-           className="block bg-red-500 text-white w-full py-2 rounded text-center hover:bg-red-600">
+            className="block bg-red-500 text-white w-full py-2 rounded text-center hover:bg-red-600">
             Proceed to Checkout
-          
+
           </Link>
         </div>
       </div>
     </section>
-    );
+  );
 }

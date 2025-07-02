@@ -44,7 +44,7 @@ export default function Header() {
           <Link to="/" className="block hover:text-red-500">Home</Link>
           <Link to="/contact" className="block hover:text-red-500">Contact</Link>
           <Link to="/about" className="block hover:text-red-500">About</Link >
-          <Link to="/singup" className="block hover:text-red-500">Sing Up</Link>
+          <Link to="/signup" className="block hover:text-red-500">Sing Up</Link>
         </nav>
 
 

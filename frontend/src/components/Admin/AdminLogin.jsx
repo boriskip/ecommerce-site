@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from '@/api/axios';
+import axiosPrivate from '../../api/axiosPrivate';
 import { useNavigate } from 'react-router-dom';
 
 const AdminLogin = ({ setUser }) => {
@@ -13,8 +13,8 @@ const AdminLogin = ({ setUser }) => {
         e.preventDefault();
         setError('');
         try {
-            await axios.get('/sanctum/csrf-cookie');
-            const response = await axios.post('/api/login', {
+            axiosPrivate.get('/sanctum/csrf-cookie');
+            const response = await axiosPrivate.post('/api/login', {
                 email,
                 password,
             });

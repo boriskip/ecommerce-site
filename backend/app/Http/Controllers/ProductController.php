@@ -64,4 +64,15 @@ class ProductController extends Controller
 
         return response()->json(['message' => 'Продукт удалён']);
     }
+    public function publicIndex()
+{
+    $products = Product::latest()
+        ->withAvg('reviews', 'rating')
+        ->withCount('reviews')
+        ->take(10) // или другое ограничение, если нужно
+        ->get();
+
+    return response()->json($products);
+}
+
 }

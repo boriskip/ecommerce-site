@@ -1,34 +1,43 @@
 import { useState, useEffect } from "react";
 import { ArrowLeft, ArrowRight, Heart, Eye, Star, StarOff } from "lucide-react";
 import ProductCard from '../../cards/ProductCard';
-import axios from "axios";
+import axiosPublic from "../../../api/axiosPublick";
 
 export default function ExploreProductsSection() {
   const [showAll, setShowAll] = useState(false);
   const [itemsToShow, setItemsToShow] = useState(4);
   const [products, setProducts] = useState([]);
 
+  // Обновление количества отображаемых карточек при изменении ширины экрана
   useEffect(() => {
     const updateItemsToShow = () => {
-      if (window.innerWidth < 768) {
-        setItemsToShow(2);
-      } else {
-        setItemsToShow(4);
-      }
+      setItemsToShow(window.innerWidth < 768 ? 2 : 4);
     };
-
     updateItemsToShow();
     window.addEventListener("resize", updateItemsToShow);
     return () => window.removeEventListener("resize", updateItemsToShow);
   }, []);
 
+  // Получение продуктов
   useEffect(() => {
-    axios.get("/api/products")
+    axiosPublic.get("/api/products/public")
       .then((res) => {
+        console.log("Продукты с сервера:", res.data);
         setProducts(res.data);
       })
       .catch((err) => {
         console.error("Ошибка при загрузке продуктов:", err);
+      });
+  }, []);
+
+  useEffect(() => {
+    axiosPublic.get('/api/products/public')
+      .then((res) => {
+        console.log('Продукты с сервера:', res.data); // 👈 Печатай сюда
+        setProducts(res.data);
+      })
+      .catch((err) => {
+        console.error('Ошибка при загрузке продуктов:', err);
       });
   }, []);
 
@@ -51,56 +60,24 @@ export default function ExploreProductsSection() {
         </div>
       </div>
 
-
-
+      {/* Сетка продуктов */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-        {(showAll ? products : products.slice(0, itemsToShow)).map((product, index) => (
-          <div
-            key={index}
-            className="border rounded-md p-4 relative group hover:shadow-md transition">
-            <div className="relative">
-              <img
-                src={`/storage/${product.image}`}
-                alt={product.title}
-                className="mx-auto h-32 ob` mb-4" />
+        {(showAll ? products : products.slice(0, itemsToShow)).map((product) => (
+          <ProductCard
+            key={product.id}
+            id={product.id}
+            title={product.title}
+            price={product.price}
+            oldPrice={product.old_price}
+            image={product.image}
+            rating={parseFloat(product.reviews_avg_rating)}
+            reviewsCount={product.reviews_count}
+          />
+        ))}
+      </div>
 
-              <div className="absolute bottom-0 left-0 w-full bg-black text-white text-sm text-center py-2 opacity-0 group-hover:opacity-100 transition duration-300">
-                Add To Cart
-              </div>
-            </div>
-            {/* Icons */}
-            < div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition" >
-
-              <button className="bg-white p-1 rounded-full border"><Heart size={16} /></button>
-
-              <button className="bg-white p-1 rounded-full border"><Eye size={16} /></button>
-            </div>
-
-            <h3 className="text-sm font-semibold mb-2 truncate">{product.title}</h3>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-red-500 font-bold text-sm">
-                ${product.price}
-              </span>
-            </div>
-
-            <div className="flex items-center text-xs mt-2 text-yellow-500">
-              {[...Array(5)].map((_, i) =>
-                i < Math.floor(product.reviews_avg_rating) ? (
-                  <Star key={i} size={14} className="fill-yellow-500 stroke-yellow-500" />
-                ) : (
-                  <StarOff key={i} size={14} className="stroke-yellow-500" />
-                )
-              )}
-              <span className="text-gray-600 ml-1">({product.reviews_count || 0})</span>
-
-            </div>
-
-          </div>
-        ))
-        }
-      </div >
+      {/* Кнопка View All */}
       <div className="text-center mt-10">
-
         <button
           onClick={() => setShowAll(!showAll)}
           className="bg-red-500 text-white px-5 py-2 rounded hover:bg-red-600 text-sm"
@@ -108,6 +85,6 @@ export default function ExploreProductsSection() {
           {showAll ? "Show Less" : "View All"}
         </button>
       </div>
-    </section >
+    </section>
   )
 }

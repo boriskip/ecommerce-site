@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Home from '../pages/Home';
-import SignUp from '../pages/SingUp.jsx';
+import SignUp from '../pages/SignUp.jsx';
 import LogIn from '../pages/LogIn';
 import Wishlist from '../pages/Wishlist'
 import Cart from "../pages/Cart.jsx";
@@ -27,7 +27,7 @@ export default function RouterView({ user, setUser }) {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/singup" element={<SignUp />} />
+      <Route path="/signup" element={<SignUp />} />
       <Route path="/login" element={<LogIn />} />
       <Route path="/wishlist" element={<Wishlist />} />
       <Route path="/cart" element={<Cart />} />
