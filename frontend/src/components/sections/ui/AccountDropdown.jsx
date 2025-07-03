@@ -1,7 +1,8 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Package, Ban, Star, LogOut, LogIn, UserPlus } from "lucide-react";
-import { useAuth } from "../../../context/UserContext";
+import { useAuth } from "@/context/AuthContext";
+
 import axiosPrivate from "../../../api/axiosPrivate";
 
 export default function AccountDropdown() {

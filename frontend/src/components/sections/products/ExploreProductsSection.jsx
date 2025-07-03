@@ -22,7 +22,6 @@ export default function ExploreProductsSection() {
   useEffect(() => {
     axiosPublic.get("/api/products/public")
       .then((res) => {
-        console.log("Продукты с сервера:", res.data);
         setProducts(res.data);
       })
       .catch((err) => {
@@ -33,7 +32,6 @@ export default function ExploreProductsSection() {
   useEffect(() => {
     axiosPublic.get('/api/products/public')
       .then((res) => {
-        console.log('Продукты с сервера:', res.data); // 👈 Печатай сюда
         setProducts(res.data);
       })
       .catch((err) => {

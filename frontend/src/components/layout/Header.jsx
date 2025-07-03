@@ -3,8 +3,11 @@ import { Link } from 'react-router-dom';
 import logo from '../../../public/logo/logo1.svg';
 import AccountDropdown from '../sections/ui/AccountDropdown';
 import { Menu, X, Heart, ShoppingCart, User } from 'lucide-react';
+import useCart from '../../hooks/useCart';
+
 
 export default function Header() {
+  const { cartQuantity } = useCart();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -70,9 +73,11 @@ export default function Header() {
           {/* Cart */}
           <Link to="/cart" className="relative flex items-center" aria-label="Cart">
             <ShoppingCart className="w-5 h-5 text-gray-600 hover:text-red-500" />
-            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
-              3
-            </span>
+            {cartQuantity > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
+                {cartQuantity}
+              </span>
+            )}
           </Link>
 
           {/* User */}
@@ -103,7 +108,7 @@ export default function Header() {
           <Link to="/" className="block hover:text-red-500">Home</Link>
           <Link to="/contact" className="block hover:text-red-500">Contact</Link>
           <Link to="/about" className="block hover:text-red-500">About</Link >
-          <Link to="/singup" className="block hover:text-red-500">Sing Up</Link>
+          <Link to="/signup" className="block hover:text-red-500">Sing Up</Link>
         </div>
       )}
 

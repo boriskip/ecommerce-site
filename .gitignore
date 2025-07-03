@@ -47,3 +47,5 @@ Thumbs.db
 /frontend/dist/
 backend/.env
 /backend/storage/
+/vendor
+/backend/vendor

@@ -3,47 +3,90 @@ import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { MdImageSearch } from "react-icons/md";
 import axiosPrivate from '../api/axiosPrivate';
+import toast from 'react-hot-toast';
+import useCart from '../hooks/useCart';
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
+  const { fetchCartQuantity } = useCart();
 
   useEffect(() => {
     axiosPrivate.get('/api/cart')
       .then((res) => {
-        if (!Array.isArray(res.data)) {
-          console.warn('⚠️ Неверный формат данных:', res.data);
+        const data = res.data;
+
+        // Проверка, массив ли это
+        if (!Array.isArray(data)) {
+          console.warn('⚠️ An array was expected, but received:', data);
+
+          // Дополнительно проверим, может это Blade или HTML
+          if (typeof data === 'string' && data.includes('<!DOCTYPE html')) {
+            console.error('❌ HTML received, possibly redirect to login');
+          }
           return;
         }
-
-        console.log('🟢 Корзина:', res.data);
-        setCartItems(res.data);
+        console.log('🛒 Cart:', data);
+        setCartItems(data);
       })
       .catch((err) => {
-        console.error('🔴 Ошибка загрузки корзины:', err);
+        console.error('❌ Error loading:', err);
+        if (err.response) {
+          console.log('📄 Response from server:', err.response.data);
+        }
         setCartItems([]);
       });
   }, []);
 
-  // // Добавление товара в корзину
-  // const addToCart = async (productId) => {
-  //   try {
-  //     const response = await axiosPrivate.post('/api/cart', { productId });
-  //     setCartItems(response.data);
-  //   } catch (error) {
-  //     console.error('Cart adding error:', error);
-  //   }
-  // };
+  const handleRemove = (id) => {
+    axiosPrivate.delete(`/api/cart/${id}`)
+      .then(() => {
+        setCartItems(prev => prev.filter(item => item.id !== id));
+        fetchCartQuantity();
+        toast.success('Item removed from cart');
+      })
+      .catch(err => {
+        console.error('Error deleting item:', err);
+        toast.error('Failed to delete item');
+      });
+  };
 
-  // // Удаление товара из корзины
-  // const removeFromCart = async (productId) => {
-  //   try {
-  //     const response = await axiosPrivate.delete(`/api/cart/${productId}`);
-  //     setCartItems(response.data);
-  //   } catch (error) {
-  //     console.error('Error wen deliting cart:', error);
-  //   }
-  // };
+  const handleQuantityChange = (id, quantity) => {
+    axiosPrivate.put(`/api/cart/${id}`, { quantity: parseInt(quantity) })
+      .then((res) => {
+        toast.success("Quantity updated");
+        fetchCartQuantity();
+        // Обновляем локально корзину
+        setCartItems((prev) =>
+          prev.map((item) =>
+            item.id === id ? { ...item, quantity: parseInt(quantity) } : item
+          )
+        );
+      })
+      .catch((err) => {
+        toast.error("Failed to update quantity");
+        console.error(err);
+      });
+  };
 
+  const clearCart = async () => {
+    try {
+      await axiosPrivate.delete('/api/cart/clear');
+      setCartItems([]); // очистить локально
+      fetchCartQuantity();
+      toast.success("The shopping cart has been emptied.");
+    } catch (error) {
+      toast.error("Error while emptying the cart");
+      console.error(error);
+    }
+  };
+
+  const totalPrice = cartItems.reduce((sum, item) => {
+    return sum + item.product.price * item.quantity;
+  }, 0);
+
+  const subtotal = cartItems.reduce((total, item) => {
+    return total + item.product.price * item.quantity;
+  }, 0);
 
   return (
     <section className="max-w-7xl mx-auto px-4 py-12">
@@ -68,7 +111,7 @@ export default function Cart() {
               <tr key={item.id} className="bg-white shadow rounded">
                 <td className="flex items-center gap-4 p-4">
                   <button
-                    onClick={() => removeFromCart(item.id)}
+                    onClick={() => handleRemove(item.id)}
                     className="text-red-500 text-xl"
                   >
                     ✕
@@ -85,7 +128,7 @@ export default function Cart() {
                   <select
                     className="border rounded p-1"
                     value={item.quantity}
-                    onChange={(e) => updateCartItem(item.id, e.target.value)}
+                    onChange={(e) => handleQuantityChange(item.id, e.target.value)}
                   >
                     {[...Array(10).keys()].map((i) => (
                       <option key={i + 1} value={i + 1}>
@@ -103,11 +146,15 @@ export default function Cart() {
 
       {/* Кнопки действий */}
       <div className="flex justify-between items-center flex-wrap gap-4 mb-10">
-        <button className="border px-4 py-2 rounded hover:bg-gray-100">
-          Return To Shop
-        </button>
-        <button className="border px-4 py-2 rounded hover:bg-gray-100">
-          Update Cart
+        <Link to='/'>
+          <button className="border px-4 py-2 rounded hover:bg-gray-100">
+            Return To Shop
+          </button>
+        </Link>
+        <button
+          onClick={clearCart}
+          className="border px-4 py-2 rounded hover:bg-gray-100">
+          Clear cart
         </button>
       </div>
 
@@ -130,15 +177,14 @@ export default function Cart() {
           <h3 className="text-lg font-semibold mb-4">Cart Total</h3>
           <div className="flex justify-between mb-2">
             <span>Subtotal:</span>
-            <span>$1750</span>
+            <span>${subtotal.toFixed(2)}</span>
           </div>
           <div className="flex justify-between mb-2">
             <span>Shipping:</span>
             <span>Free</span>
           </div>
           <div className="flex justify-between font-semibold text-lg mb-4">
-            <span>Total:</span>
-            <span>$1750</span>
+            Total: €{totalPrice.toFixed(2)}
           </div>
           <Link to="/checkout"
             className="block bg-red-500 text-white w-full py-2 rounded text-center hover:bg-red-600">

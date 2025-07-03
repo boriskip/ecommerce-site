@@ -13,8 +13,9 @@ export function AuthProvider({ children }) {
             try {
                 const res = await axiosPrivate.get("/api/user");
                 setUser(res.data);
+
             } catch (err) {
-                console.log("⛔ Не авторизован", err?.response?.status);
+                // console.log("⛔ Не авторизован", err?.response?.status);
                 setUser(null);
             } finally {
                 setIsLoading(false);

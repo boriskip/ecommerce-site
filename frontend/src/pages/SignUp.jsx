@@ -2,7 +2,8 @@ import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import axiosPublic from "../api/axiosPublick";
 import axiosPrivate from "../api/axiosPrivate";
-import { useAuth } from "../context/UserContext";
+import { useAuth } from "@/context/AuthContext";
+
 
 export default function SignUp() {
     const navigate = useNavigate();

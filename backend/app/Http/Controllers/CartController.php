@@ -8,11 +8,13 @@ use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $items = CartItem::with('product')
-            ->where('user_id', Auth::id())
-            ->get();
+    $user = $request->user();
+
+    $items = CartItem::with('product') // загрузить связанные продукты
+                ->where('user_id', $request->user()->id)
+                ->get();
 
         return response()->json($items);
     }
@@ -38,4 +40,26 @@ class CartController extends Controller
 
         return response()->json(['message' => 'Item removed from cart']);
     }
+
+    public function update(Request $request, $id)
+{
+    $cartItem = CartItem::where('id', $id)
+        ->where('user_id', auth()->id())
+        ->first();
+
+    if (!$cartItem) {
+        return response()->json(['message' => 'Not found'], 404);
+    }
+
+    $cartItem->quantity = $request->input('quantity', 1);
+    $cartItem->save();
+
+    return response()->json(['message' => 'Quantity updated']);
+}
+public function clear()
+{
+      $user = auth()->user();
+    CartItem::where('user_id', $user->id)->delete();
+    return response()->json(['message' => 'Cart cleared']);
+}
 }

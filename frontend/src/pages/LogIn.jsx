@@ -1,8 +1,9 @@
 // src/pages/auth/LogIn.jsx
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import React, { useState } from "react";
 import axiosPrivate from "../api/axiosPrivate";
-import { useAuth } from "../context/UserContext";
+import { useAuth } from "@/context/AuthContext";
+
 
 
 export default function LogIn() {
@@ -86,7 +87,7 @@ export default function LogIn() {
 
                         <p className="text-sm text-center">
                             Don't have an account?{" "}
-                            <a href="/singup" className="text-black underline">Sign Up</a>
+                            <Link to="/signup" className="text-black underline">Sign Up</Link>
                         </p>
                     </form>
                 </div>

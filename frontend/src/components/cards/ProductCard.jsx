@@ -1,8 +1,26 @@
 import React from "react";
 import { Eye, ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
+import axiosPrivate from '@/api/axiosPrivate';
+import toast from 'react-hot-toast';
+
 
 export default function ProductCard({ id, title, price, oldPrice, image, rating, reviewsCount, onEdit, onDelete, isAdmin = false }) {
+  const handleAddToCart = () => {
+    axiosPrivate.post('/api/cart', {
+      product_id: id,
+      quantity: 1
+    })
+      .then(res => {
+        console.log('🛒 Added to cart:', res.data);
+        toast.success('🛒 Item added to cart')
+      })
+      .catch(err => {
+        console.error('❌ Error when adding to cart:', err);
+        toast.error('❌ Failed to add item');
+      });
+  };
+
   return (
     <div className="border rounded-md p-4 relative group">
       <button className="absolute top-2 right-2 text-gray-400 hover:text-red-500">
@@ -27,7 +45,9 @@ export default function ProductCard({ id, title, price, oldPrice, image, rating,
 
       {/* Только для пользователей */}
       {!isAdmin && (
-        <button className="bg-black text-white py-1.5 w-full flex items-center justify-center gap-2 hover:bg-gray-800">
+        <button
+          onClick={handleAddToCart}
+          className="bg-black text-white py-1.5 w-full flex items-center justify-center gap-2 hover:bg-gray-800">
           <ShoppingCart size={16} /> Add To Cart
         </button>
       )}
