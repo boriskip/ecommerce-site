@@ -12,6 +12,9 @@ export default function PaymentOptions() {
       </div>
 
       <button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Add New Payment Method</button>
+
+      <button className="text-sm text-red-500 hover:underline mt-2">Remove</button>
+
     </div>
   );
 }
