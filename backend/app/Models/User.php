@@ -58,4 +58,8 @@ public function addresses()
 {
     return $this->hasMany(Address::class);
 }
+public function paymentMethods()
+{
+    return $this->hasMany(PaymentMethod::class);
+}
 }
