@@ -10,6 +10,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\StripeController;
 // use App\Http\Controllers\WishlistController;
 
 
@@ -55,4 +56,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/payment-methods/{id}', [PaymentMethodController::class, 'destroy']);
    // Orders
      Route::post('/orders', [OrderController::class, 'store']);
+
+    //  strip payment 
+    Route::post('/stripe/checkout', [StripeController::class, 'createCheckoutSession']);
 });

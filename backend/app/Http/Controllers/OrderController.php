@@ -6,7 +6,6 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log; // 👈 вот это добавь
 use Illuminate\Support\Facades\Auth;
 
 
@@ -14,7 +13,7 @@ class OrderController extends Controller
 {
   public function store(Request $request)
 {
-     Log::info('📦 Payload received', $request->all());
+ 
 
     $data = $request->validate([
         'address_id' => 'required|exists:addresses,id',

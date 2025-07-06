@@ -72,6 +72,37 @@ export default function Checkout() {
     }
   };
 
+  const handleStripeCheckout = async () => {
+    if (!selectedAddressId) {
+      toast.error("Please select an address.");
+      return;
+    }
+
+    if (paymentMethod === "card" && !selectedCardId) {
+      toast.error("Please select a card.");
+      return;
+    }
+
+    const payload = {
+      address_id: selectedAddressId,
+      payment_method: "card", // stripe = всегда карта
+      card_id: selectedCardId,
+      items: cartItems.map(item => ({
+        product_id: item.product.id,
+        quantity: item.quantity,
+      })),
+    };
+
+    console.log("🧾 Payload to Stripe Checkout:", payload);
+
+    try {
+      const res = await axiosPrivate.post('/api/stripe/checkout', payload);
+      window.location.href = res.data.url;
+    } catch (err) {
+      console.error("❌ Stripe error:", err.response?.data || err.message);
+      toast.error("Stripe checkout failed");
+    }
+  };
 
   const total = cartItems.reduce((sum, item) => {
     return sum + item.product.price * item.quantity;
@@ -199,7 +230,7 @@ export default function Checkout() {
 
         {/* Кнопка */}
         <button
-          onClick={handlePlaceOrder}
+          onClick={paymentMethod === "card" ? handleStripeCheckout : handlePlaceOrder}
           type="button"
           className="bg-red-500 w-full text-white py-2 rounded hover:bg-red-600 mt-4"
         >
