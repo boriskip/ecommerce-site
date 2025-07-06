@@ -4,8 +4,11 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+// use App\Models\OrderItem;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Order;
 
 class User extends Authenticatable
 {
@@ -62,4 +65,8 @@ public function paymentMethods()
 {
     return $this->hasMany(PaymentMethod::class);
 }
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
 }
