@@ -48,5 +48,36 @@ class OrderController extends Controller
 
     return response()->json(['order' => $order->load('items')], 201);
 }
+public function completeAfterStripe(Request $request)
+{
+    $user = Auth::user();
 
+    $cartItems = $user->cartItems()->with('product')->get();
+
+    $total = $cartItems->sum(function ($item) {
+        return $item->product->price * $item->quantity;
+    });
+
+
+    $order = $user->orders()->create([
+        'address_id' => $user->addresses()->latest()->first()->id ?? null,
+        'payment_method' => 'card',
+        'total_price' => $total,
+        'status' => 'paid',
+    ]);
+
+
+    foreach ($cartItems as $item) {
+        $order->orderItems()->create([
+            'product_id' => $item->product_id,
+            'quantity' => $item->quantity,
+            'price' => $item->product->price,
+        ]);
+        
+    }
+
+    $user->cartItems()->delete();
+
+    return response()->json(['message' => 'Order completed']);
+}
 }

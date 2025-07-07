@@ -54,9 +54,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/payment-methods', [PaymentMethodController::class, 'index']);
     Route::post('/payment-methods', [PaymentMethodController::class, 'store']);
     Route::delete('/payment-methods/{id}', [PaymentMethodController::class, 'destroy']);
+
    // Orders
      Route::post('/orders', [OrderController::class, 'store']);
-
+     Route::post('/orders/complete-checkout', [OrderController::class, 'completeAfterStripe']);
+     
     //  strip payment 
     Route::post('/stripe/checkout', [StripeController::class, 'createCheckoutSession']);
+
 });

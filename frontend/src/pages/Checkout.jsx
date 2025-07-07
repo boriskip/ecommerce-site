@@ -21,24 +21,7 @@ export default function Checkout() {
     axiosPrivate.get("/api/payment-methods").then(res => setCards(res.data));
   }, []);
 
-  // const handlePlaceOrder = async () => {
-  //   try {
-  //     const res = await axiosPrivate.post("/api/orders", {
-  //       address_id: selectedAddressId,
-  //       payment_method: paymentMethod === "card" ? "card" : "cash",
-  //       card_id: selectedCardId, // можно передавать, если надо
-  //       items: cartItems.map(item => ({
-  //         product_id: item.product.id,
-  //         quantity: item.quantity,
-  //       })),
-  //     });
 
-  //     toast.success("Order placed!");
-  //   } catch (err) {
-  //     toast.error("Failed to place order");
-  //     console.error(err);
-  //   }
-  // };
   const handlePlaceOrder = async () => {
     // Проверки
     if (!selectedAddressId) {

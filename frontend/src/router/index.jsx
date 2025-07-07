@@ -22,6 +22,8 @@ import AdminLayout from "../layouts/AdminLayout.jsx";
 import AdminLogin from "../components/Admin/AdminLogin.jsx";
 import ProtectedRoute from '../components/ProtectedRoute';
 import AdminDashboard from "../components/Admin/dashboard/AdminDashboard.jsx";
+import SuccessPage from "../pages/SuccessPage";
+
 
 export default function RouterView({ user, setUser }) {
   return (
@@ -36,6 +38,7 @@ export default function RouterView({ user, setUser }) {
       <Route path="/about" element={<About />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="*" element={<NotFound />} />
+      <Route path="/success" element={<SuccessPage />} />
       <Route path="/product/:id" element={<ProductDetails />} />
 
       <Route path="/account" element={<Account />}>

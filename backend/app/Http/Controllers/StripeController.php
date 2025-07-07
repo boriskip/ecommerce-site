@@ -6,34 +6,48 @@ use Illuminate\Http\Request;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log; // 👈 вот это добавь
-
+use Illuminate\Support\Facades\Log; 
+use App\Models\CartItem;
 
 class StripeController extends Controller
 {
-    public function createCheckoutSession(Request $request)
-    {
+public function createCheckoutSession(Request $request)
+{
+    $user = $request->user();
 
-            Log::info('📦 Payload received', $request->all());
-        Stripe::setApiKey(env('STRIPE_SECRET'));
+    $cartItems = CartItem::with('product')->where('user_id', $user->id)->get();
 
-        $session = Session::create([
-            'payment_method_types' => ['card'],
-            'line_items' => [[
-                'price_data' => [
-                    'currency' => 'eur',
-                    'product_data' => [
-                        'name' => 'Demo Product',
-                    ],
-                    'unit_amount' => 1999, // в центах (19.99€)
-                ],
-                'quantity' => 1,
-            ]],
-            'mode' => 'payment',
-            'success_url' => 'http://localhost:8080/success',
-            'cancel_url' => 'http://localhost:8080/cancel',
-        ]);
-
-        return response()->json(['url' => $session->url]);
+    if ($cartItems->isEmpty()) {
+        return response()->json(['message' => 'Cart is empty'], 400);
     }
+
+    $lineItems = [];
+
+    foreach ($cartItems as $item) {
+        $lineItems[] = [
+            'price_data' => [
+                'currency' => 'eur',
+                'product_data' => [
+                    'name' => $item->product->title,
+                ],
+                'unit_amount' => intval($item->product->price * 100), // cents
+            ],
+            'quantity' => $item->quantity,
+        ];
+    }
+
+    Stripe::setApiKey(env('STRIPE_SECRET'));
+
+    $session = Session::create([
+        'payment_method_types' => ['card'],
+        'line_items' => $lineItems,
+        'mode' => 'payment',
+        'success_url' => 'http://localhost:8080/success',
+        'cancel_url' => 'http://localhost:8080/cancel',
+        'locale' => 'en', // 👈 явно установить язык
+    ]);
+
+    return response()->json(['url' => $session->url]);
+}
+
 }
