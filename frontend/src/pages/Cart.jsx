@@ -8,18 +8,15 @@ import useCart from '../hooks/useCart';
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
-  const { fetchCartQuantity } = useCart();
+  const { fetchCart } = useCart();
+
 
   useEffect(() => {
     axiosPrivate.get('/api/cart')
       .then((res) => {
         const data = res.data;
-
-        // Проверка, массив ли это
         if (!Array.isArray(data)) {
           console.warn('⚠️ An array was expected, but received:', data);
-
-          // Дополнительно проверим, может это Blade или HTML
           if (typeof data === 'string' && data.includes('<!DOCTYPE html')) {
             console.error('❌ HTML received, possibly redirect to login');
           }
@@ -27,6 +24,7 @@ export default function Cart() {
         }
         console.log('🛒 Cart:', data);
         setCartItems(data);
+        fetchCart();
       })
       .catch((err) => {
         console.error('❌ Error loading:', err);
@@ -41,7 +39,8 @@ export default function Cart() {
     axiosPrivate.delete(`/api/cart/${id}`)
       .then(() => {
         setCartItems(prev => prev.filter(item => item.id !== id));
-        fetchCartQuantity();
+        fetchCart();
+        // fetchCartQuantity();
         toast.success('Item removed from cart');
       })
       .catch(err => {
@@ -54,7 +53,8 @@ export default function Cart() {
     axiosPrivate.put(`/api/cart/${id}`, { quantity: parseInt(quantity) })
       .then((res) => {
         toast.success("Quantity updated");
-        fetchCartQuantity();
+        fetchCart();
+
         // Обновляем локально корзину
         setCartItems((prev) =>
           prev.map((item) =>
@@ -72,7 +72,8 @@ export default function Cart() {
     try {
       await axiosPrivate.delete('/api/cart/clear');
       setCartItems([]); // очистить локально
-      fetchCartQuantity();
+      fetchCart();
+
       toast.success("The shopping cart has been emptied.");
     } catch (error) {
       toast.error("Error while emptying the cart");

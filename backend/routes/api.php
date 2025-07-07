@@ -62,4 +62,15 @@ Route::middleware('auth:sanctum')->group(function () {
     //  strip payment 
     Route::post('/stripe/checkout', [StripeController::class, 'createCheckoutSession']);
 
+Route::middleware('auth:sanctum')->get('/notifications', function () {
+    $user = auth()->user();
+
+    $orders = $user->orders()->where('status', '!=', 'delivered')->count();
+    $cancellations = $user->orders()->where('status', 'cancelled')->count();
+    $reviews = $user->reviews()->whereNull('read_at')->count();
+
+    $total = $orders + $cancellations + $reviews;
+
+    return response()->json(['count' => $total]);
+});
 });

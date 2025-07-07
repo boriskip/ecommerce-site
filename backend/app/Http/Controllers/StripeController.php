@@ -42,6 +42,7 @@ public function createCheckoutSession(Request $request)
         'payment_method_types' => ['card'],
         'line_items' => $lineItems,
         'mode' => 'payment',
+        // 'currency' => 'usd',
         'success_url' => 'http://localhost:8080/success',
         'cancel_url' => 'http://localhost:8080/cancel',
         'locale' => 'en', // 👈 явно установить язык

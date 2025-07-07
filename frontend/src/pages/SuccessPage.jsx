@@ -1,16 +1,19 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosPrivate from "../api/axiosPrivate";
+import useCart from '../hooks/useCart';
 import toast from "react-hot-toast";
 
 
 export default function SuccessPage() {
+    const { clearCart } = useCart();
     const navigate = useNavigate();
 
     useEffect(() => {
         const completeOrder = async () => {
             try {
                 const res = await axiosPrivate.post("/api/orders/complete-checkout");
+                clearCart();
                 toast.success("🎉 Payment successful! Order confirmed.");
                 navigate("/success", { replace: true });
             } catch (err) {

@@ -3,9 +3,11 @@ import { Eye, ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 import axiosPrivate from '@/api/axiosPrivate';
 import toast from 'react-hot-toast';
+import useCart from '../../hooks/useCart';
 
 
 export default function ProductCard({ id, title, price, oldPrice, image, rating, reviewsCount, onEdit, onDelete, isAdmin = false }) {
+  const { fetchCart } = useCart();
   const handleAddToCart = () => {
     axiosPrivate.post('/api/cart', {
       product_id: id,
@@ -13,7 +15,8 @@ export default function ProductCard({ id, title, price, oldPrice, image, rating,
     })
       .then(res => {
         console.log('🛒 Added to cart:', res.data);
-        toast.success('🛒 Item added to cart')
+        toast.success('🛒 Item added to cart');
+        fetchCart();
       })
       .catch(err => {
         console.error('❌ Error when adding to cart:', err);

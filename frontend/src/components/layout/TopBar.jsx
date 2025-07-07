@@ -1,8 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import LanguageSwitcher from './LanguageSwitcher';
+import { useAuth } from "../../context/AuthContext";
 
 export default function TopBar() {
+  const { user } = useAuth();
+
+  if (user) return null;
+
   return (
     <div className="bg-black text-white text-sm px-4 py-3">
       <div className='max-w-screen-xl mx-auto flex justify-between items-center'>

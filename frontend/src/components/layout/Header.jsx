@@ -4,13 +4,15 @@ import logo from '../../../public/logo/logo1.svg';
 import AccountDropdown from '../sections/ui/AccountDropdown';
 import { Menu, X, Heart, ShoppingCart, User } from 'lucide-react';
 import useCart from '../../hooks/useCart';
-
+import useNotifications from '@/hooks/useNotifications';
 
 export default function Header() {
   const { cartQuantity } = useCart();
+  // const notificationCount = useNotifications()
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { count } = useNotifications();
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -89,7 +91,7 @@ export default function Header() {
             >
               <User className="w-5 h-5 text-gray-600 hover:text-red-500" />
               <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
-                3
+                {count}
               </span>
             </button>
 

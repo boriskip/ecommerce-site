@@ -20,10 +20,15 @@ export function CartProvider({ children }) {
             setCartQuantity(totalQuantity);
         } catch (error) {
             console.error('Ошибка загрузки корзины:', error);
-            toast.error('Ошибка получения корзины');
+            toast.error('Error retrieving shopping cart');
             setCartItems([]);
             setCartQuantity(0);
         }
+    };
+
+    const clearCart = () => {
+        setCartItems([]);
+        setCartQuantity(0);
     };
 
     useEffect(() => {
@@ -36,6 +41,7 @@ export function CartProvider({ children }) {
                 cartItems,
                 cartQuantity,
                 fetchCart,
+                clearCart,
             }}
         >
             {children}
