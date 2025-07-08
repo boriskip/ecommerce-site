@@ -37,14 +37,12 @@ export default function Checkout() {
     const payload = {
       address_id: selectedAddressId,
       payment_method: paymentMethod,
-      ...(paymentMethod === "card" && { card_id: selectedCardId }), // 👈 добавим только если карта
+      ...(paymentMethod === "card" && { card_id: selectedCardId }),
       items: cartItems.map(item => ({
         product_id: item.product.id,
         quantity: item.quantity,
       })),
     };
-
-    console.log("📦 Payload to send:", payload);
 
     try {
       const response = await axiosPrivate.post("/api/orders", payload);
@@ -68,16 +66,13 @@ export default function Checkout() {
 
     const payload = {
       address_id: selectedAddressId,
-      payment_method: "card", // stripe = всегда карта
+      payment_method: "card",
       card_id: selectedCardId,
       items: cartItems.map(item => ({
         product_id: item.product.id,
         quantity: item.quantity,
       })),
     };
-
-    console.log("🧾 Payload to Stripe Checkout:", payload);
-
     try {
       const res = await axiosPrivate.post('/api/stripe/checkout', payload);
       window.location.href = res.data.url;

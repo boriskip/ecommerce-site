@@ -7,13 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 // use App\Models\OrderItem;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 use App\Models\Order;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -73,4 +72,9 @@ public function paymentMethods()
 {
     return $this->hasMany(CartItem::class);
 }
+public function notifications() 
+{
+return $this->hasMany(Notification::class);
+}
+
 }

@@ -11,6 +11,7 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\StripeController;
+use App\Http\Controllers\NotificationController;
 // use App\Http\Controllers\WishlistController;
 
 
@@ -62,15 +63,6 @@ Route::middleware('auth:sanctum')->group(function () {
     //  strip payment 
     Route::post('/stripe/checkout', [StripeController::class, 'createCheckoutSession']);
 
-Route::middleware('auth:sanctum')->get('/notifications', function () {
-    $user = auth()->user();
+Route::get('/notifications', [NotificationController::class, 'index']);
 
-    $orders = $user->orders()->where('status', '!=', 'delivered')->count();
-    $cancellations = $user->orders()->where('status', 'cancelled')->count();
-    $reviews = $user->reviews()->whereNull('read_at')->count();
-
-    $total = $orders + $cancellations + $reviews;
-
-    return response()->json(['count' => $total]);
-});
 });
