@@ -9,6 +9,17 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
+    public function index(Request $request)
+{
+    $user = $request->user();
+
+    $orders = $user->orders()
+        ->with(['orderItems.product', 'address']) // Загрузка связанных моделей
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    return response()->json(['orders' => $orders]);
+}
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -59,40 +70,65 @@ if (!$alreadyExists) {
         return response()->json(['order' => $order->load('items')], 201);
     }
 
-    public function completeAfterStripe(Request $request)
-    {
-        $user = Auth::user();
+public function completeAfterStripe(Request $request)
+{
+    $user = Auth::user();
 
-        $cartItems = $user->cartItems()->with('product')->get();
+    // ✅ Проверка: есть ли уже свежий заказ со статусом paid
+    $existingOrder = $user->orders()
+        ->where('status', 'paid')
+        ->where('created_at', '>=', now()->subMinutes(2))
+        ->latest()
+        ->first();
 
-        $total = $cartItems->sum(function ($item) {
-            return $item->product->price * $item->quantity;
-        });
-
-        $order = $user->orders()->create([
-            'address_id' => $user->addresses()->latest()->first()->id ?? null,
-            'payment_method' => 'card',
-            'total_price' => $total,
-            'status' => 'paid',
-        ]);
-
-$message = "Order #{$order->id} has been paid successfully.";
-
-$user->notifications()->firstOrCreate([
-    'message' => $message,
-], [
-    'type' => 'order',
-]);
-        foreach ($cartItems as $item) {
-            $order->orderItems()->create([
-                'product_id' => $item->product_id,
-                'quantity' => $item->quantity,
-                'price' => $item->product->price,
-            ]);
-        }
-
-        $user->cartItems()->delete();
-
-        return response()->json(['message' => 'Order completed']);
+    if ($existingOrder) {
+        return response()->json([
+            'message' => 'Order already completed recently',
+            'order_id' => $existingOrder->id
+        ], 200);
     }
+
+    // 🛒 Получение товаров из корзины
+    $cartItems = $user->cartItems()->with('product')->get();
+
+    if ($cartItems->isEmpty()) {
+        return response()->json(['message' => 'Cart is empty'], 400);
+    }
+
+    // 💵 Подсчёт суммы
+    $total = $cartItems->sum(function ($item) {
+        return $item->product->price * $item->quantity;
+    });
+
+    // 📦 Создание заказа
+    $order = $user->orders()->create([
+        'address_id' => $user->addresses()->latest()->first()->id ?? null,
+        'payment_method' => 'card',
+        'total_price' => $total,
+        'status' => 'paid',
+    ]);
+
+    // 🔔 Уведомление
+    $message = "Order #{$order->id} has been paid successfully.";
+
+    $user->notifications()->firstOrCreate([
+        'message' => $message,
+    ], [
+        'type' => 'order',
+    ]);
+
+    // 🧾 Создание позиций заказа
+    foreach ($cartItems as $item) {
+        $order->orderItems()->create([
+            'product_id' => $item->product_id,
+            'quantity' => $item->quantity,
+            'price' => $item->product->price,
+        ]);
+    }
+
+    // 🧹 Очистка корзины
+    $user->cartItems()->delete();
+
+    return response()->json(['message' => 'Order completed']);
+}
 }

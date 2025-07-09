@@ -59,7 +59,7 @@ Route::middleware('auth:sanctum')->group(function () {
    // Orders
      Route::post('/orders', [OrderController::class, 'store']);
      Route::post('/orders/complete-checkout', [OrderController::class, 'completeAfterStripe']);
-     
+     Route::get('/orders', [OrderController::class, 'index']);
     //  strip payment 
     Route::post('/stripe/checkout', [StripeController::class, 'createCheckoutSession']);
 
