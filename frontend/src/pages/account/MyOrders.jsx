@@ -1,11 +1,22 @@
 import { useEffect, useState } from "react";
 import axiosPrivate from "@/api/axiosPrivate";
+import { toast } from "react-hot-toast";
 
 export default function MyOrders() {
   const [notifications, setNotifications] = useState([]);
   const [orders, setOrders] = useState([]);
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   axiosPrivate.get("/api/notifications")
+  //     .then((res) => setNotifications(res.data.notifications))
+  //     .catch((err) => console.error("Failed to load notifications", err));
+
+  //   axiosPrivate.get("/api/orders")
+  //     .then((res) => setOrders(res.data.orders))
+  //     .catch((err) => console.error("Failed to load orders", err));
+  // }, []);
+
+  const fetchData = () => {
     axiosPrivate.get("/api/notifications")
       .then((res) => setNotifications(res.data.notifications))
       .catch((err) => console.error("Failed to load notifications", err));
@@ -13,9 +24,23 @@ export default function MyOrders() {
     axiosPrivate.get("/api/orders")
       .then((res) => setOrders(res.data.orders))
       .catch((err) => console.error("Failed to load orders", err));
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
-
+  const handlePayOrder = async (orderId) => {
+    try {
+      const res = await axiosPrivate.post('/api/stripe/checkout/order', {
+        order_id: orderId
+      });
+      window.location.href = res.data.url;
+    } catch (err) {
+      toast.error("❌ Failed to pay order");
+      console.error(err);
+    }
+  };
 
   return (
     <div>
@@ -56,8 +81,34 @@ export default function MyOrders() {
                     <p className="text-sm text-gray-600">
                       Payment: {order.payment_method}
                     </p>
-
+                    {/* Если заказ ожидает оплаты и способ оплаты — наличные */}
+                    {order.status === 'pending' && order.payment_method === 'cash' && (
+                      <button
+                        onClick={() => handlePayOrder(order.id)}
+                        className="mt-3 px-4 py-2 bg-blue-600 text-white rounded text-sm"
+                      >
+                        Pay Now
+                      </button>
+                    )}
+                    {order.status === 'pending' && (
+                      <button
+                        onClick={async () => {
+                          try {
+                            await axiosPrivate.post(`/api/orders/${order.id}/cancel`);
+                            toast.success("❌ Order cancelled");
+                            fetchData(); // обновление
+                          } catch (err) {
+                            console.error("Cancel error:", err.response?.data || err.message);
+                            toast.error("⚠️ Could not cancel order");
+                          }
+                        }}
+                        className="mt-2 px-4 py-2 bg-red-600 text-white rounded text-sm ml-2"
+                      >
+                        Cancel Order
+                      </button>
+                    )}
                   </div>
+
                 </div>
 
                 {/* Товары в заказе */}

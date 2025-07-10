@@ -42,8 +42,9 @@ class OrderController extends Controller
             'address_id' => $data['address_id'],
             'payment_method' => $data['payment_method'],
             'total_price' => $total,
+            'status' => 'pending',
         ]);
-$message = "Order #{$order->id} has been paid successfully.";
+$message = "Order #{$order->id} placed. Awaiting cash payment.";
 
 $alreadyExists = $user->notifications()
     ->where('type', 'order')
@@ -66,6 +67,8 @@ if (!$alreadyExists) {
                 'price' => $product->price,
             ]);
         }
+
+        $user->cartItems()->delete();
 
         return response()->json(['order' => $order->load('items')], 201);
     }
@@ -130,5 +133,56 @@ public function completeAfterStripe(Request $request)
     $user->cartItems()->delete();
 
     return response()->json(['message' => 'Order completed']);
+}
+public function payWithCard(Request $request, Order $order)
+{
+    $user = $request->user();
+
+    // Авторизация
+    if ($order->user_id !== $user->id) {
+        return response()->json(['error' => 'Unauthorized'], 403);
+    }
+
+    // Можно оплатить только pending заказ с cash
+    if ($order->status !== 'pending' || $order->payment_method !== 'cash') {
+        return response()->json(['error' => 'Order cannot be paid'], 400);
+    }
+
+    // 💳 Инициализация Stripe (или заглушка)
+    try {
+        // Тут может быть Stripe Checkout Session или просто обновление статуса
+        $order->update([
+            'status' => 'paid',
+            'payment_method' => 'card',
+        ]);
+
+        $message = "Order #{$order->id} has been paid successfully.";
+
+        $user->notifications()->firstOrCreate([
+            'message' => $message,
+        ], [
+            'type' => 'order',
+        ]);
+
+        return response()->json(['message' => 'Order paid successfully']);
+    } catch (\Throwable $e) {
+        Log::error('Failed to pay order', ['error' => $e->getMessage()]);
+        return response()->json(['error' => 'Payment failed'], 500);
+    }
+}
+public function cancel(Order $order)
+{
+    if ($order->user_id !== auth()->id()) {
+        return response()->json(['error' => 'Unauthorized'], 403);
+    }
+
+    if ($order->status !== 'pending') {
+        return response()->json(['error' => 'Cannot cancel a paid order'], 400);
+    }
+
+    $order->status = 'cancelled';
+    $order->save();
+
+    return response()->json(['message' => 'Order cancelled']);
 }
 }
