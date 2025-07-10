@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Notification;
 
 class OrderController extends Controller
 {
@@ -170,19 +171,30 @@ public function payWithCard(Request $request, Order $order)
         return response()->json(['error' => 'Payment failed'], 500);
     }
 }
-public function cancel(Order $order)
+public function cancel(Request $request, $id)
 {
-    if ($order->user_id !== auth()->id()) {
-        return response()->json(['error' => 'Unauthorized'], 403);
+    try {
+        $order = Order::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
+
+        if ($order->status !== 'pending') {
+            return response()->json(['message' => 'Only pending orders can be cancelled'], 400);
+        }
+
+        $order->update(['status' => 'cancelled']);
+
+        $order->status_history = array_merge($order->status_history ?? [], [
+            ['status' => 'cancelled', 'timestamp' => now()],
+        ]);
+        $order->save();
+
+        Notification::create([
+            'user_id' => auth()->id(),
+            'message' => "❌ Order #{$order->id} has been cancelled.",
+        ]);
+
+        return response()->json(['message' => 'Order cancelled']);
+    } catch (\Throwable $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
     }
-
-    if ($order->status !== 'pending') {
-        return response()->json(['error' => 'Cannot cancel a paid order'], 400);
-    }
-
-    $order->status = 'cancelled';
-    $order->save();
-
-    return response()->json(['message' => 'Order cancelled']);
 }
 }

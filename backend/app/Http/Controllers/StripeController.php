@@ -39,15 +39,17 @@ public function createCheckoutSession(Request $request)
 
     Stripe::setApiKey(env('STRIPE_SECRET'));
 
-    $session = Session::create([
-        'payment_method_types' => ['card'],
-        'line_items' => $lineItems,
-        'mode' => 'payment',
-        // 'currency' => 'usd',
-        'success_url' => 'http://localhost:8080/success',
-        'cancel_url' => 'http://localhost:8080/cancel',
-        'locale' => 'en', // 👈 явно установить язык
-    ]);
+$session = Session::create([
+    'payment_method_types' => ['card'],
+    'line_items' => $lineItems,
+    'mode' => 'payment',
+    'success_url' => 'http://localhost:8080/success?session_id={CHECKOUT_SESSION_ID}', // ❗ Обязательно
+    'cancel_url' => 'http://localhost:8080/cancel',
+    'locale' => 'en',
+    'metadata' => [
+        'source' => 'cart', // ✅ Это важно
+    ],
+]);
 
     return response()->json(['url' => $session->url]);
 }
@@ -91,9 +93,10 @@ public function payOrderWithStripe(Request $request)
 
     return response()->json(['url' => $session->url]);
 }
+
 public function completeCheckout(Request $request)
 {
-    $sessionId = $request->input('session_id');
+     $sessionId = $request->input('session_id');
 
     if (!$sessionId) {
         return response()->json(['message' => 'Missing session_id'], 400);
@@ -103,19 +106,53 @@ public function completeCheckout(Request $request)
 
     try {
         $session = Session::retrieve($sessionId);
-        $orderId = $session->metadata['order_id'] ?? null;
+        $metadata = $session->metadata ?? [];
 
-        if (!$orderId) {
-            return response()->json(['message' => 'Missing order_id'], 400);
+        // Если заказ уже создан
+        if (isset($metadata['order_id'])) {
+            $order = Order::findOrFail($metadata['order_id']);
+            $order->update(['status' => 'paid']);
+            return response()->json(['message' => 'Order marked as paid']);
         }
 
-        $order = Order::findOrFail($orderId);
-        $order->status = 'paid';
-        $order->save();
+          if (($metadata['source'] ?? null) === 'cart') {
+            // ✅ Оплата из корзины — создаём заказ
+            $user = $request->user();
+            $cartItems = $user->cartItems()->with('product')->get();
 
-        return response()->json(['message' => 'Order marked as paid']);
+            if ($cartItems->isEmpty()) {
+                return response()->json(['message' => 'Cart is empty'], 400);
+            }
+
+             $total = $cartItems->sum(fn($item) => $item->product->price * $item->quantity);
+
+        // Если нет order_id — отправить в OrderController
+        return app(OrderController::class)->completeAfterStripe($request);
+
+            $order = $user->orders()->create([
+                'address_id' => $user->addresses()->latest()->first()->id ?? null,
+                'payment_method' => 'card',
+                'total_price' => $total,
+                'status' => 'paid',
+            ]);
+
+   foreach ($cartItems as $item) {
+                $order->orderItems()->create([
+                    'product_id' => $item->product_id,
+                    'quantity' => $item->quantity,
+                    'price' => $item->product->price,
+                ]);
+            }
+
+            $user->cartItems()->delete();
+
+            return response()->json(['message' => 'Order created and paid']);
+        }
+
+        return response()->json(['message' => 'Missing or invalid metadata'], 400);
+
     } catch (\Exception $e) {
-        return response()->json(['message' => 'Error completing payment', 'error' => $e->getMessage()], 500);
+        return response()->json(['message' => 'Payment failed', 'error' => $e->getMessage()], 500);
     }
 }
 }

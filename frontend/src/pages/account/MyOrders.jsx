@@ -2,6 +2,20 @@ import { useEffect, useState } from "react";
 import axiosPrivate from "@/api/axiosPrivate";
 import { toast } from "react-hot-toast";
 
+function formatStatus(status) {
+  switch (status) {
+    case "pending": return "🕒 Awaiting payment";
+    case "paid": return "✅ Paid";
+    case "cancelled": return "❌ Cancelled";
+    default: return status;
+  }
+}
+
+function formatDate(dateStr) {
+  const date = new Date(dateStr);
+  return date.toLocaleString(); // можно заменить на date.toLocaleDateString() при желании
+}
+
 export default function MyOrders() {
   const [notifications, setNotifications] = useState([]);
   const [orders, setOrders] = useState([]);
@@ -73,8 +87,20 @@ export default function MyOrders() {
                     <p className="font-semibold">Order #{order.id}</p>
                     <p className="text-sm text-gray-600">Status: {order.status}</p>
                     <p className="text-sm text-gray-600">
-                      Date: {new Date(order.created_at).toLocaleDateString()}
+
                     </p>
+                    <div className="text-sm text-gray-600 space-y-1 mt-2">
+                      {Array.isArray(order.status_history) && order.status_history.length > 0 && (
+                        <div className="space-y-1">
+                          {order.status_history.map((entry, idx) => (
+                            <div key={idx}>
+                              {formatStatus(entry.status)} — {formatDate(entry.timestamp)}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      <div>Date: {new Date(order.created_at).toLocaleDateString()}</div>
+                    </div>
                     <p className="text-sm text-gray-600">
                       Total: ${Number(order.total_price).toFixed(2)}
                     </p>
@@ -94,7 +120,7 @@ export default function MyOrders() {
                       <button
                         onClick={async () => {
                           try {
-                            await axiosPrivate.post(`/api/orders/${order.id}/cancel`);
+                            await axiosPrivate.patch(`/api/orders/${order.id}/cancel`);
                             toast.success("❌ Order cancelled");
                             fetchData(); // обновление
                           } catch (err) {

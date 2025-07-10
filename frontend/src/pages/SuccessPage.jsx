@@ -24,7 +24,7 @@ export default function SuccessPage() {
 
         const completeOrder = async () => {
             try {
-                const res = await axiosPrivate.post("/api/orders/complete-checkout", { session_id: sessionId, });
+                const res = await axiosPrivate.post("/api/stripe/complete", { session_id: sessionId, });
                 clearCart();
                 toast.success("🎉 Payment successful! Order confirmed.");
 

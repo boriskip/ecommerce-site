@@ -57,18 +57,22 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/payment-methods/{id}', [PaymentMethodController::class, 'destroy']);
 
    // Orders
-     Route::post('/orders', [OrderController::class, 'store']);
+     Route::get('/orders', [OrderController::class, 'index']); //Get all orders
+     Route::post('/orders', [OrderController::class, 'store']); // Create cash order
+
+    // Route::post('/orders/complete-checkout', [OrderController::class, 'completeAfterStripe']); //Moved to stripe section for clarity.
+
+     Route::patch('/orders/{order}/cancel', [OrderController::class, 'cancel']); // Cancel order
+     Route::patch('/orders/{order}/pay-card', [OrderController::class, 'payWithCard']); // Pay without Stripe - possible admin option.
+
+
+    //  Stripe Payment Routes
+    Route::post('/stripe/checkout', [StripeController::class, 'createCheckoutSession']); // Create the Stripe checkout session
+
+    Route::post('/stripe/pay-order', [StripeController::class, 'payOrderWithStripe']); // Pay order with stripe
+    Route::post('/stripe/checkout/order', [StripeController::class, 'payOrderWithStripe']); //duplicate route
+    Route::post('/stripe/complete', [StripeController::class, 'completeCheckout']); // After stripe redirect
      Route::post('/orders/complete-checkout', [OrderController::class, 'completeAfterStripe']);
-     Route::get('/orders', [OrderController::class, 'index']);
-     Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel']);
-
-
-    //  strip payment 
-    Route::post('/stripe/checkout', [StripeController::class, 'createCheckoutSession']);
-     Route::patch('/orders/{order}/pay-card', [OrderController::class, 'payWithCard']);
-     Route::post('/stripe/checkout/order', [StripeController::class, 'payOrderWithStripe']);
-     Route::post('/orders/complete-checkout', [StripeController::class, 'completeCheckout']);
-
 
 Route::get('/notifications', [NotificationController::class, 'index']);
 
