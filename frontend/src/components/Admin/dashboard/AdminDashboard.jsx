@@ -13,7 +13,7 @@ export default function AdminDashboard() {
     const [showAddModal, setShowAddModal] = useState(false);
 
     const fetchProducts = () => {
-        axiosPrivate.get("/api/products")
+        axiosPrivate.get("/api/admin/products")
             .then((res) => {
                 setProducts(res.data);
             })
@@ -32,7 +32,7 @@ export default function AdminDashboard() {
         if (!confirmDelete) return;
 
         try {
-            await axiosPrivate.delete(`/api/products/${id}`);
+            await axiosPrivate.delete(`/api/admin/products/${id}`);
             setProducts((prev) => prev.filter((p) => p.id !== id));
         } catch (error) {
             console.error("Ошибка при удалении товара:", error);

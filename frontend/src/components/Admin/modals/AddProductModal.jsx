@@ -16,10 +16,14 @@ export default function AddProductModal({ onClose, onProductAdded }) {
         formData.append('title', title);
         formData.append('price', price);
         formData.append('old_price', oldPrice);
-        formData.append('image', image); // это файл, не строка
+        // formData.append('image', image); 
 
+        if (image instanceof File) {
+            formData.append('image', image);
+            console.log(image);
+        }
         try {
-            const response = await axiosPrivate.post('/api/products', formData, {
+            const response = await axiosPrivate.post('/api/admin/products', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -29,9 +33,16 @@ export default function AddProductModal({ onClose, onProductAdded }) {
             onProductAdded(response.data); // обновляем родительский компонент
             onClose();
         } catch (err) {
-            setError('Ошибка при добавлении товара');
-            console.error(err);
+            if (err.response) {
+                console.error('🔥 RESPONSE ERROR:', err.response.status);
+                console.error('🔥 RESPONSE DATA:', err.response.data);
+                setError(`Ошибка: ${err.response.status} — ${JSON.stringify(err.response.data)}`);
+            } else {
+                console.error('🔥 ERROR:', err.message);
+                setError(err.message);
+            }
         }
+
     };
 
     return (

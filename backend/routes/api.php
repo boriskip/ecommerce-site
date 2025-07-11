@@ -12,6 +12,7 @@ use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
 // use App\Http\Controllers\WishlistController;
 
 
@@ -35,7 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/cart/{id}', [CartController::class, 'destroy']);
     Route::put('/cart/{id}', [CartController::class, 'update']);
     
-    // 🛍 Products CRUD
+    // 🛍 Products User
     Route::get('/products', [ProductController::class, 'index']);
     Route::post('/products', [ProductController::class, 'store']);
     Route::put('/products/{id}', [ProductController::class, 'update']);
@@ -66,14 +67,20 @@ Route::middleware('auth:sanctum')->group(function () {
      Route::patch('/orders/{order}/pay-card', [OrderController::class, 'payWithCard']); // Pay without Stripe - possible admin option.
 
 
+     // Admin dashbord
+Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
+    Route::apiResource('products', AdminProductController::class);
+    Route::apiResource('new-arrivals', \App\Http\Controllers\Admin\NewArrivalController::class);
+});
+
     //  Stripe Payment Routes
     Route::post('/stripe/checkout', [StripeController::class, 'createCheckoutSession']); // Create the Stripe checkout session
 
     Route::post('/stripe/pay-order', [StripeController::class, 'payOrderWithStripe']); // Pay order with stripe
     Route::post('/stripe/checkout/order', [StripeController::class, 'payOrderWithStripe']); //duplicate route
     Route::post('/stripe/complete', [StripeController::class, 'completeCheckout']); // After stripe redirect
-     Route::post('/orders/complete-checkout', [OrderController::class, 'completeAfterStripe']);
+    Route::post('/orders/complete-checkout', [OrderController::class, 'completeAfterStripe']);
 
-Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::get('/notifications', [NotificationController::class, 'index']);
 
 });
