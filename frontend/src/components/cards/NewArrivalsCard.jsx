@@ -29,6 +29,10 @@ export default function NewArrivalsCardCard({ id, title, subtitle, image, onEdit
             {/* Название */}
             <h4 className="text-sm font-semibold mb-1">{title}</h4>
 
+            {/* Подзаголовок */}
+            {subtitle && (
+                <p className="text-xs text-gray-500 mb-2">{subtitle}</p>
+            )}
 
             {/* Только для админа */}
             {isAdmin && (
