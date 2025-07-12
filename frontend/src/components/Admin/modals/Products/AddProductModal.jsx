@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axiosPrivate from '../../../api/axiosPrivate';
+import axiosPrivate from '../../../../api/axiosPrivate';
 
 export default function AddProductModal({ onClose, onProductAdded }) {
     const [title, setTitle] = useState('');

@@ -38,9 +38,10 @@ export default function ProductCard({ id, title, price, oldPrice, image, rating,
         className="w-full h-40 object-contain mb-4"
       /> */}
 
+      {/* Фото */}
       {image ? (
         <img
-          src={`/storage/${image}`}
+          src={image}
           alt={title}
           className="w-full h-40 object-contain mb-4"
         />

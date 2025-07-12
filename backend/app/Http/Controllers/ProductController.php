@@ -13,7 +13,13 @@ class ProductController extends Controller
             ->withAvg('reviews', 'rating')
             ->withCount('reviews')
             ->take(10)
-            ->get();
+            ->get()
+             ->map(function ($product) {
+            $product->image_url = $product->image 
+                ? asset('storage/' . $product->image)
+                : null;
+            return $product;
+        });
 
         return response()->json($products);
     }

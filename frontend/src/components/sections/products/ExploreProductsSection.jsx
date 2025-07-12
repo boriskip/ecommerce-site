@@ -67,7 +67,7 @@ export default function ExploreProductsSection() {
             title={product.title}
             price={product.price}
             oldPrice={product.old_price}
-            image={product.image}
+            image={product.image_url}
             rating={parseFloat(product.reviews_avg_rating)}
             reviewsCount={product.reviews_count}
           />
