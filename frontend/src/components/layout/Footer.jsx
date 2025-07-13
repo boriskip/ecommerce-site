@@ -1,16 +1,90 @@
 import { Mail } from "lucide-react";
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axiosPublic from "../../api/axiosPublick";
 
 export default function Footer() {
+  const [footerData, setFooterData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFooterData = async () => {
+      try {
+        const response = await axiosPublic.get('/api/footer');
+        setFooterData(response.data);
+      } catch (error) {
+        console.error('Error fetching footer data:', error);
+        // Fallback к статическим данным
+        setFooterData({
+          exclusive_title: 'Exclusive',
+          exclusive_subscribe_text: 'Subscribe',
+          exclusive_offer_text: 'Get 10% off your first order',
+          support_title: 'Support',
+          support_address: '111 Bijoy sarani, Dhaka, DH 1515, Bangladesh.',
+          support_email: 'exclusive@gmail.com',
+          support_phone: '+88015-88888-9999',
+          account_title: 'Account',
+          account_links: [
+            { text: 'Manage My Account', url: '/account/profile' },
+            { text: 'Login / Register', url: '/login' },
+            { text: 'Cart', url: '/cart' },
+            { text: 'Wishlist', url: '/wishlist' },
+            { text: 'Shop', url: '/' },
+          ],
+          quick_link_title: 'Quick Link',
+          quick_links: [
+            { text: 'Privacy Policy', url: '#' },
+            { text: 'Terms Of Use', url: '#' },
+            { text: 'FAQ', url: '#' },
+            { text: 'Contact', url: '/contact' },
+          ],
+          download_app_title: 'Download App',
+          download_app_subtitle: 'Save $3 with App New User Only',
+          qr_code_image: '/storage/footer/QrCode.png',
+          google_play_image: '/storage/footer/google-app.png',
+          app_store_image: '/storage/footer/download-appstore.png',
+          social_links: [
+            { platform: 'Facebook', url: '#', icon: 'FaFacebook' },
+            { platform: 'Twitter', url: '#', icon: 'FaTwitter' },
+            { platform: 'Instagram', url: '#', icon: 'FaInstagram' },
+            { platform: 'LinkedIn', url: '#', icon: 'FaLinkedin' },
+          ],
+          copyright_text: '© Copyright Rimel 2022. All right reserved',
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFooterData();
+  }, []);
+
+  if (loading) {
+    return (
+      <footer className="bg-black text-white px-4 py-12">
+        <div className="max-w-7xl mx-auto text-center">
+          <div className="animate-pulse">
+            <div className="h-4 bg-gray-700 rounded mb-2"></div>
+            <div className="h-4 bg-gray-700 rounded mb-2"></div>
+            <div className="h-4 bg-gray-700 rounded"></div>
+          </div>
+        </div>
+      </footer>
+    );
+  }
+
+  if (!footerData) {
+    return null;
+  }
   return (
     <footer className="bg-black text-white px-4 py-12">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-5 gap-8">
         {/* Exclusive */}
         <div>
-          <h3 className="text-lg font-semibold mb-2">Exclusive</h3>
-          <p className="text-sm mb-2">Subscribe</p>
-          <p className="text-sm mb-4">Get 10% off your first order</p>
+          <h3 className="text-lg font-semibold mb-2">{footerData.exclusive_title}</h3>
+          <p className="text-sm mb-2">{footerData.exclusive_subscribe_text}</p>
+          <p className="text-sm mb-4">{footerData.exclusive_offer_text}</p>
           <form className="flex border rounded overflow-hidden">
             <input
               type="email"
@@ -25,92 +99,78 @@ export default function Footer() {
 
         {/* Support */}
         <div>
-          <h3 className="text-lg font-semibold mb-2">Support</h3>
-          <p className="text-sm">111 Bijoy sarani, Dhaka,</p>
-          <p className="text-sm">DH 1515, Bangladesh.</p>
-          <p className="text-sm mt-2">exclusive@gmail.com</p>
-          <p className="text-sm mt-2">+88015-88888-9999</p>
+          <h3 className="text-lg font-semibold mb-2">{footerData.support_title}</h3>
+          <p className="text-sm">{footerData.support_address}</p>
+          <p className="text-sm mt-2">{footerData.support_email}</p>
+          <p className="text-sm mt-2">{footerData.support_phone}</p>
         </div>
 
         {/* Account */}
         <div>
-          <h3 className="text-lg font-semibold mb-2">Account</h3>
+          <h3 className="text-lg font-semibold mb-2">{footerData.account_title}</h3>
           <ul className="text-sm space-y-1">
-            <li>
-              <Link to="/account/profile" className="flex items-center gap-2 hover:text-red-500">
-                Manage My Account
-              </Link>
-            </li>
-            <li>
-              <Link to="/login" className="hover:text-red-500">
-                Login / Register
-              </Link>
-            </li>
-            <li>
-              <Link to="/cart" className="hover:text-red-500">
-                Cart
-              </Link>
-            </li>
-            <li>
-              <Link to="/wishlist" className="hover:text-red-500">
-                Wishlist
-              </Link>
-            </li>
-            <li>
-              <Link to="/" className="hover:text-red-500">
-                Shop
-              </Link>
-            </li>
+            {footerData.account_links.map((link, index) => (
+              <li key={index}>
+                <Link to={link.url} className="hover:text-red-500">
+                  {link.text}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
 
         {/* Quick Link */}
         <div>
-          <h3 className="text-lg font-semibold mb-2">Quick Link</h3>
+          <h3 className="text-lg font-semibold mb-2">{footerData.quick_link_title}</h3>
           <ul className="text-sm space-y-1">
-            <li>Privacy Policy</li>
-            <li>Terms Of Use</li>
-            <li>FAQ</li>
-            <li>
-              <Link to="/contact" className="hover:text-red-500">
-                Contact
-              </Link>
-            </li>
+            {footerData.quick_links.map((link, index) => (
+              <li key={index}>
+                {link.url === '#' ? (
+                  <span>{link.text}</span>
+                ) : (
+                  <Link to={link.url} className="hover:text-red-500">
+                    {link.text}
+                  </Link>
+                )}
+              </li>
+            ))}
           </ul>
         </div>
 
         {/* Download App */}
         <div>
-          <h3 className="text-lg font-semibold mb-2">Download App</h3>
-          <p className="text-sm mb-4">Save $3 with App New User Only</p>
+          <h3 className="text-lg font-semibold mb-2">{footerData.download_app_title}</h3>
+          <p className="text-sm mb-4">{footerData.download_app_subtitle}</p>
           <div className="flex gap-2 mb-4">
-            <img src="public/footer/Qr Code.png" alt="QR Code" className="w-20 h-16" />
+            <img src={footerData.qr_code_image} alt="QR Code" className="w-20 h-16" />
             <div className="space-y-2">
-              <img src="public/footer/google-app.png" alt="Google Play" className="w-28 h-7" />
-              <img src="public/footer/appstore.png" alt="App Store" className="w-28 h-7" />
+              <img src={footerData.google_play_image} alt="Google Play" className="w-28 h-7" />
+              <img src={footerData.app_store_image} alt="App Store" className="w-28 h-7" />
             </div>
           </div>
 
           <div className="flex gap-4 mt-4">
-            <a href="#" aria-label="Facebook">
-              <FaFacebook className="w-5 h-5 text-white hover:text-gray-400" />
-            </a>
-            <a href="#" aria-label="Twitter">
-              <FaTwitter className="w-5 h-5 text-white hover:text-gray-400" />
-            </a>
-            <a href="#" aria-label="Instagram">
-              <FaInstagram className="w-5 h-5 text-white hover:text-gray-400" />
-            </a>
-            <a href="#" aria-label="LinkedIn">
-              <FaLinkedin className="w-5 h-5 text-white hover:text-gray-400" />
-            </a>
+            {footerData.social_links.map((social, index) => {
+              const IconComponent = {
+                'FaFacebook': FaFacebook,
+                'FaTwitter': FaTwitter,
+                'FaInstagram': FaInstagram,
+                'FaLinkedin': FaLinkedin,
+              }[social.icon] || FaFacebook;
+
+              return (
+                <a key={index} href={social.url} aria-label={social.platform}>
+                  <IconComponent className="w-5 h-5 text-white hover:text-gray-400" />
+                </a>
+              );
+            })}
           </div>
         </div>
       </div>
 
       <hr className="my-8 border-gray-700" />
       <p className="text-center text-xs text-gray-400">
-        © Copyright Rimel 2022. All right reserved
+        {footerData.copyright_text}
       </p>
     </footer>
   );

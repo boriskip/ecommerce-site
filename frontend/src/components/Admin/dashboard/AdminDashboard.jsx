@@ -1,5 +1,6 @@
 import ProductList from '../Products/ProductList';
 import NewArrivalsList from '../NewArrivals/NewArrivalsList';
+import AdminFooter from '../footer/AdminFooter';
 
 
 export default function AdminDashboard() {
@@ -10,6 +11,7 @@ export default function AdminDashboard() {
             {/* Можно позже добавить табы или меню */}
             <ProductList />
             <NewArrivalsList />
+            <AdminFooter />
         </div>
 
     );

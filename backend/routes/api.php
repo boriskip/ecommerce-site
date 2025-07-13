@@ -12,8 +12,12 @@ use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\BenefitsController;
+use App\Http\Controllers\NewArrivalsController;
+use App\Http\Controllers\FooterController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\BenefitController as AdminBenefitController;
+use App\Http\Controllers\Admin\FooterController as AdminFooterController;
 
 // use App\Http\Controllers\WishlistController;
 
@@ -22,6 +26,9 @@ use App\Http\Controllers\Admin\BenefitController as AdminBenefitController;
 Route::post('/register', [RegisteredUserController::class, 'store']);
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 Route::get('/products/public', [ProductController::class, 'publicIndex']);
+Route::get('/benefits', [BenefitsController::class, 'index']); // Публичный доступ к Benefits
+Route::get('/new-arrivals', [NewArrivalsController::class, 'index']); // Публичный доступ к New Arrivals
+Route::get('/footer', [FooterController::class, 'index']); // Публичный доступ к Footer
 Route::get('/sanctum/csrf-cookie', function () {
     return response()->json(['csrf' => 'ok']);
 });
@@ -83,5 +90,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('products', AdminProductController::class);
         Route::apiResource('new-arrivals', \App\Http\Controllers\Admin\NewArrivalController::class);
         Route::apiResource('benefits', AdminBenefitController::class);
+        Route::get('/footer', [AdminFooterController::class, 'index']);
+        Route::put('/footer', [AdminFooterController::class, 'update']);
     });
 });

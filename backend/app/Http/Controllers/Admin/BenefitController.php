@@ -9,29 +9,52 @@ use Illuminate\Http\Request;
 class BenefitController extends Controller
 {
     public function index() {
-        return Benefit::all();
+        try {
+            return Benefit::all();
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     public function store(Request $request) 
     {
-        $request->validate([
-            'icon' => 'required|string',
-            'title' => 'required|string',
-            'subtitle' => 'required|string',
-        ]);
-        return Benefit::create($request->all());
+        try {
+            $request->validate([
+                'icon' => 'required|string|max:50',
+                'title' => 'required|string|max:255',
+                'subtitle' => 'required|string|max:500',
+            ]);
+            
+            return Benefit::create($request->all());
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     public function update(Request $request, Benefit $benefit)
     {
-        $benefit->update($request->only(['icon', 'title', 'subtitle']));
+        try {
+            $request->validate([
+                'icon' => 'required|string|max:50',
+                'title' => 'required|string|max:255',
+                'subtitle' => 'required|string|max:500',
+            ]);
+            
+            $benefit->update($request->only(['icon', 'title', 'subtitle']));
 
-        return response()->json(['message' => 'Updated']); 
+            return response()->json(['message' => 'Updated']); 
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     public function destroy(Benefit $benefit)
     {
-        $benefit->delete();
-        return response()->json(['message' => 'Deleted']);
+        try {
+            $benefit->delete();
+            return response()->json(['message' => 'Deleted']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }

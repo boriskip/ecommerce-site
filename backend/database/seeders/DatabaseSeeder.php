@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
             ReviewSeeder::class,
             // 👇 Добавим AddressSeeder
             AddressSeeder::class,
+            FooterSettingSeeder::class,
         ]);
     }
 }
