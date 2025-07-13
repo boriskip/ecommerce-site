@@ -13,6 +13,8 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\BenefitController as AdminBenefitController;
+
 // use App\Http\Controllers\WishlistController;
 
 
@@ -66,13 +68,6 @@ Route::middleware('auth:sanctum')->group(function () {
      Route::patch('/orders/{order}/cancel', [OrderController::class, 'cancel']); // Cancel order
      Route::patch('/orders/{order}/pay-card', [OrderController::class, 'payWithCard']); // Pay without Stripe - possible admin option.
 
-
-     // Admin dashbord
-Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
-    Route::apiResource('products', AdminProductController::class);
-    Route::apiResource('new-arrivals', \App\Http\Controllers\Admin\NewArrivalController::class);
-});
-
     //  Stripe Payment Routes
     Route::post('/stripe/checkout', [StripeController::class, 'createCheckoutSession']); // Create the Stripe checkout session
 
@@ -83,4 +78,10 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
 
     Route::get('/notifications', [NotificationController::class, 'index']);
 
+    // Admin dashboard - с аутентификацией
+    Route::prefix('admin')->group(function () {
+        Route::apiResource('products', AdminProductController::class);
+        Route::apiResource('new-arrivals', \App\Http\Controllers\Admin\NewArrivalController::class);
+        Route::apiResource('benefits', AdminBenefitController::class);
+    });
 });

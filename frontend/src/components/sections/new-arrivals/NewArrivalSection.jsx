@@ -1,26 +1,26 @@
 import BenefitsBar from './BenefitsBar';
-// const newArrivalItems = [
-//   {
-//     title: "PlayStation 5",
-//     subtitle: "Black and White version of the PS5 coming out on sale.",
-//     image: "public/new-arrival/ps5.png",
-//   },
-//   {
-//     title: "Women’s Collections",
-//     subtitle: "Featured women collections that give you another vibe.",
-//     image: "/public/new-arrival/attractive-woman-wearing-hat-posing-black-background 1.png",
-//   },
-//   {
-//     title: "Speakers",
-//     subtitle: "Amazon wireless speakers.",
-//     image: "public/new-arrival/amazon.png",
-//   },
-//   {
-//     title: "Perfume",
-//     subtitle: "GUCCI INTENSE OUD EDP.",
-//     image: "public/new-arrival/gucci.png",
-//   },
-// ];
+const newArrivalItems = [
+  {
+    title: "PlayStation 5",
+    subtitle: "Black and White version of the PS5 coming out on sale.",
+    image: "public/new-arrival/ps5.png",
+  },
+  {
+    title: "Women’s Collections",
+    subtitle: "Featured women collections that give you another vibe.",
+    image: "/public/new-arrival/attractive-woman-wearing-hat-posing-black-background 1.png",
+  },
+  {
+    title: "Speakers",
+    subtitle: "Amazon wireless speakers.",
+    image: "public/new-arrival/amazon.png",
+  },
+  {
+    title: "Perfume",
+    subtitle: "GUCCI INTENSE OUD EDP.",
+    image: "public/new-arrival/gucci.png",
+  },
+];
 
 export default function NewArrivalSection() {
   return (

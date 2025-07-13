@@ -4,6 +4,7 @@ import axiosPrivate from '@/api/axiosPrivate';
 import NewArrivalsCard from '../../cards/NewArrivalsCard';
 import AddNewArrivalModal from '../modals/NewArrivals/AddNewArrivalModal';
 import EditNewArrivalModal from '../modals/NewArrivals/EditNewArrivalModal';
+import BenefitBarAdmin from './BenefitBarAdmin';
 
 
 
@@ -64,8 +65,8 @@ export default function NewArrivalsList() {
                         isAdmin={true}
                     />
                 ))}
-            </div>
 
+            </div>
             {newArrivals.length > 6 && (
                 <div className="text-center mt-4">
                     <button
@@ -80,6 +81,9 @@ export default function NewArrivalsList() {
             {showAddModal && <AddNewArrivalModal onClose={() => setShowAddModal(false)} onProductAdded={fetchProducts} />}
 
             {editingNewArrivals && <EditNewArrivalModal item={editingNewArrivals} onClose={() => setEditingNewArrivals(null)} onUpdated={fetchProducts} />}
+
+            <BenefitBarAdmin />
+
         </div>
     );
 }
