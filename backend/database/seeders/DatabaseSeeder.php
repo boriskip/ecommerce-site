@@ -34,6 +34,8 @@ class DatabaseSeeder extends Seeder
             // 👇 Добавим AddressSeeder
             AddressSeeder::class,
             FooterSettingSeeder::class,
+            HeaderSettingSeeder::class,
+            HeroSettingSeeder::class,
         ]);
     }
 }
