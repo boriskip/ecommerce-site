@@ -68,15 +68,15 @@ export default function MyProfile() {
       <form className="grid grid-cols-1 md:grid-cols-2 gap-4" onSubmit={handleProfileSave}>
         <div>
           <label className="block text-sm font-medium">Name</label>
-          <input name="name" className="mt-1 w-full border px-3 py-2 rounded" value={form.name} onChange={handleProfileChange} />
+          <input name="name" className="mt-1 w-full border px-3 py-2 rounded" value={form.name ?? ""} onChange={handleProfileChange} />
         </div>
         <div>
           <label className="block text-sm font-medium">Email</label>
-          <input name="email" className="mt-1 w-full border px-3 py-2 rounded" value={form.email} onChange={handleProfileChange} />
+          <input name="email" className="mt-1 w-full border px-3 py-2 rounded" value={form.email ?? ""} onChange={handleProfileChange} />
         </div>
         <div className="col-span-2">
           <label className="block text-sm font-medium">Address</label>
-          <input name="address" className="mt-1 w-full border px-3 py-2 rounded" value={form.address} onChange={handleProfileChange} />
+          <input name="address" className="mt-1 w-full border px-3 py-2 rounded" value={form.address ?? ""} onChange={handleProfileChange} />
         </div>
         <div className="col-span-2 flex justify-end gap-4 mt-4">
           <button type="submit" className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Save Changes</button>
@@ -85,9 +85,9 @@ export default function MyProfile() {
 
       <form className="mt-8" onSubmit={handlePasswordSave}>
         <h3 className="text-sm font-semibold mb-2">Change Password</h3>
-        <input name="current_password" type="password" placeholder="Current Password" className="w-full mb-2 border px-3 py-2 rounded" value={passwordForm.current_password} onChange={handlePasswordChange} />
-        <input name="password" type="password" placeholder="New Password" className="w-full mb-2 border px-3 py-2 rounded" value={passwordForm.password} onChange={handlePasswordChange} />
-        <input name="password_confirmation" type="password" placeholder="Confirm New Password" className="w-full border px-3 py-2 rounded" value={passwordForm.password_confirmation} onChange={handlePasswordChange} />
+        <input name="current_password" type="password" placeholder="Current Password" className="w-full mb-2 border px-3 py-2 rounded" value={passwordForm.current_password ?? ""} onChange={handlePasswordChange} />
+        <input name="password" type="password" placeholder="New Password" className="w-full mb-2 border px-3 py-2 rounded" value={passwordForm.password ?? ""} onChange={handlePasswordChange} />
+        <input name="password_confirmation" type="password" placeholder="Confirm New Password" className="w-full border px-3 py-2 rounded" value={passwordForm.password_confirmation ?? ""} onChange={handlePasswordChange} />
         <div className="flex justify-end mt-4">
           <button type="submit" className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Change Password</button>
         </div>

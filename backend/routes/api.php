@@ -35,6 +35,7 @@ Route::get('/new-arrivals', [NewArrivalsController::class, 'index']); // Пуб�
 Route::get('/footer', [FooterController::class, 'index']); // Публичный доступ к Footer
 Route::get('/header', [HeaderController::class, 'index']); // Публичный доступ к Header
 Route::get('/hero', [HeroController::class, 'index']); // Публичный доступ к Hero
+Route::get('/flash-sales', [\App\Http\Controllers\Api\FlashSaleController::class, 'index']);
 Route::get('/sanctum/csrf-cookie', function () {
     return response()->json(['csrf' => 'ok']);
 });
@@ -94,6 +95,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Admin dashboard - с аутентификацией
     Route::prefix('admin')->group(function () {
         Route::apiResource('products', AdminProductController::class);
+        Route::apiResource('flash-sales', \App\Http\Controllers\Admin\FlashSaleController::class);
         Route::apiResource('new-arrivals', \App\Http\Controllers\Admin\NewArrivalController::class);
         Route::apiResource('benefits', AdminBenefitController::class);
         Route::get('/footer', [AdminFooterController::class, 'index']);

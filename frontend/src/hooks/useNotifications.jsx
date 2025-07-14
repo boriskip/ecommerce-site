@@ -4,13 +4,17 @@ import axiosPrivate from "../api/axiosPrivate";
 
 export default function useNotifications() {
     const [count, setCount] = useState(0);
+    const [isUnauthorized, setIsUnauthorized] = useState(false);
 
     const fetchNotifications = async () => {
         try {
             const res = await axiosPrivate.get("/api/notifications");
             setCount(res.data.count || 0);
+            setIsUnauthorized(false);
         } catch (error) {
-            console.error("Failed to load notifications:", error);
+            if (error.response?.status === 401) {
+                setIsUnauthorized(true);
+            }
             setCount(0);
         }
     };
@@ -19,6 +23,5 @@ export default function useNotifications() {
         fetchNotifications();
     }, []);
 
-    return { count, fetchNotifications };
-
+    return { count, fetchNotifications, isUnauthorized };
 }

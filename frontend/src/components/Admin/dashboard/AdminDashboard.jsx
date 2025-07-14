@@ -3,7 +3,7 @@ import NewArrivalsList from '../NewArrivals/NewArrivalsList';
 import AdminFooter from '../footer/AdminFooter';
 import AdminHeader from '../header/AdminHeader';
 import AdminHero from '../hero/AdminHero';
-
+import FlashSalesList from '../flash-sale/FlashSalesList';
 
 export default function AdminDashboard() {
 
@@ -13,6 +13,7 @@ export default function AdminDashboard() {
             {/* Можно позже добавить табы или меню */}
             <AdminHeader />
             <AdminHero />
+            <FlashSalesList />
             <ProductList />
             <NewArrivalsList />
             <AdminFooter />
