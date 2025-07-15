@@ -33,7 +33,7 @@ export default function FlashProductCard({ product }) {
       <div className="relative">
         {image ? (
           <img
-            src={`/storage/flash-sales/${image.split('/').pop()}`}
+            src={`/${product.image}`}
             alt={title}
             className="w-full h-50 object-cover mb-4"
           />

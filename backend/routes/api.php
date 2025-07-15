@@ -11,6 +11,7 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\StripeController;
+use App\Http\Controllers\FlashSaleController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\BenefitsController;
 use App\Http\Controllers\NewArrivalsController;
@@ -35,7 +36,7 @@ Route::get('/new-arrivals', [NewArrivalsController::class, 'index']); // Пуб�
 Route::get('/footer', [FooterController::class, 'index']); // Публичный доступ к Footer
 Route::get('/header', [HeaderController::class, 'index']); // Публичный доступ к Header
 Route::get('/hero', [HeroController::class, 'index']); // Публичный доступ к Hero
-Route::get('/flash-sales', [\App\Http\Controllers\Api\FlashSaleController::class, 'index']);
+Route::get('/flash-sales', [\App\Http\Controllers\FlashSaleController::class, 'index']);
 Route::get('/sanctum/csrf-cookie', function () {
     return response()->json(['csrf' => 'ok']);
 });
