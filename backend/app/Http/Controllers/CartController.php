@@ -24,11 +24,48 @@ class CartController extends Controller
         $request->validate([
             'product_id' => 'required|exists:products,id',
             'quantity'   => 'required|integer|min:1',
+            'flash_sale_id' => 'nullable|exists:flash_sales,id',
         ]);
 
-        $item = CartItem::updateOrCreate(
-            ['user_id' => Auth::id(), 'product_id' => $request->product_id],
-            ['quantity' => $request->quantity]
+        $userId = Auth::id();
+        $productId = $request->product_id;
+        $quantity = $request->quantity;
+        $flashSaleId = $request->flash_sale_id;
+
+        // По умолчанию — обычная цена продукта
+        $price = null;
+
+        if ($flashSaleId) {
+            // Проверяем, что flash sale действительно относится к этому продукту и активна
+            $flashSale = \App\Models\FlashSale::where('id', $flashSaleId)
+                ->where('product_id', $productId)
+                ->where('starts_at', '<=', now())
+                ->where('ends_at', '>=', now())
+                ->first();
+
+            if ($flashSale) {
+                $price = $flashSale->price;
+            }
+        }
+
+        if ($price === null) {
+            // Если нет flash sale — берём обычную цену продукта
+            $product = \App\Models\Product::findOrFail($productId);
+            $price = $product->price;
+            $flashSaleId = null; // неактуально
+        }
+
+        // Сохраняем в корзину (добавьте поле flash_sale_id и price в модель CartItem, если их нет)
+        $item = \App\Models\CartItem::updateOrCreate(
+            [
+                'user_id' => $userId,
+                'product_id' => $productId,
+                'flash_sale_id' => $flashSaleId,
+            ],
+            [
+                'quantity' => $quantity,
+                'price' => $price,
+            ]
         );
 
         return response()->json(['message' => 'Item added to cart', 'item' => $item]);

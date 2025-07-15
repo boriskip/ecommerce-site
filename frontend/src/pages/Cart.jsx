@@ -82,11 +82,11 @@ export default function Cart() {
   };
 
   const totalPrice = cartItems.reduce((sum, item) => {
-    return sum + item.product.price * item.quantity;
+    return sum + item.price * item.quantity;
   }, 0);
 
   const subtotal = cartItems.reduce((total, item) => {
-    return total + item.product.price * item.quantity;
+    return total + item.price * item.quantity;
   }, 0);
 
   return (
@@ -124,7 +124,12 @@ export default function Cart() {
                   />
                   <span>{item.product.title}</span>
                 </td>
-                <td>${item.product.price}</td>
+                <td>
+                  <span className="text-red-500 font-bold">${item.price}</span>
+                  {Number(item.price) < Number(item.product.price) && (
+                    <span className="text-gray-500 text-sm line-through ml-2">${item.product.price}</span>
+                  )}
+                </td>
                 <td>
                   <select
                     className="border rounded p-1"
@@ -138,7 +143,7 @@ export default function Cart() {
                     ))}
                   </select>
                 </td>
-                <td>${(item.product.price * item.quantity).toFixed(2)}</td>
+                <td>${(item.price * item.quantity).toFixed(2)}</td>
               </tr>
             ))}
           </tbody>

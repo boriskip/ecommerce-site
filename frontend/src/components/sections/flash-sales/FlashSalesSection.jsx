@@ -4,7 +4,7 @@ import "keen-slider/keen-slider.min.css";
 import FlashTimer from './FlashTimer';
 import FlashProductCard from './FlashProductCard';
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import axiosPublic from '../../../api/axiosPublick';
+import axiosPrivate from '../../../api/axiosPrivate';
 
 
 export default function FlashSalesSection() {
@@ -16,7 +16,7 @@ export default function FlashSalesSection() {
   useEffect(() => {
     async function fetchFlashSales() {
       try {
-        const res = await axiosPublic.get('/api/flash-sales');
+        const res = await axiosPrivate.get('/api/flash-sales');
         setFlashSales(Array.isArray(res.data) ? res.data : []);
       } catch (e) {
         setFlashSales([]);
@@ -99,14 +99,17 @@ export default function FlashSalesSection() {
           ) : (
             Array.isArray(flashSales) ? flashSales.map((fs) => (
               <div key={fs.id} className="keen-slider__slide">
-                <FlashProductCard product={{
-                  ...fs.product,
-                  price: fs.price,
-                  oldPrice: fs.old_price,
-                  discount: fs.discount,
-                  rating: fs.rating,
-                  reviews: fs.reviews,
-                }} />
+                <FlashProductCard
+                  product={{
+                    ...fs.product,
+                    price: fs.price,         // ← цена из Flash Sale!
+                    oldPrice: fs.old_price,  // ← старая цена
+                    discount: fs.discount,
+                    rating: fs.rating,
+                    reviews: fs.reviews,
+                  }}
+                  flashSaleId={fs.id}
+                />
               </div>
             )) : null
           )}

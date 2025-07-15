@@ -1,6 +1,13 @@
 import { Heart, Eye, Star, StarOff } from "lucide-react";
+import useCart from '../../../hooks/useCart';
+import toast from 'react-hot-toast';
+import axiosPrivate from '../../../api/axiosPrivate';
 
-export default function FlashProductCard({ product }) {
+
+export default function FlashProductCard({ product, flashSaleId }) {
+  const { fetchCart } = useCart();
+
+
   if (!product || typeof product !== 'object') {
     return null;
   }
@@ -13,6 +20,23 @@ export default function FlashProductCard({ product }) {
     rating = 0,
     reviews = 0,
   } = product;
+
+  const handleAddToCart = async () => {
+    try {
+      // Можно добавить flash_sale_id, если хотите отличать такие товары
+      await axiosPrivate.post('/api/cart', {
+        product_id: product.id,
+        quantity: 1,
+        price: product.price, // цена со скидкой!
+        flash_sale_id: flashSaleId, // если нужно
+      });
+      fetchCart(); // обновить корзину
+      toast.success('Товар добавлен в корзину!');
+    } catch (e) {
+      console.error(e.response?.data || e);
+      toast.error('Ошибка при добавлении в корзину');
+    }
+  };
 
   return (
     <div className="relative group bg-white border rounded-lg p-4 hover:shadow-md transition-all">
@@ -40,9 +64,12 @@ export default function FlashProductCard({ product }) {
         ) : (
           <div className="w-full h-50 bg-gray-100 flex items-center justify-center mb-4 text-gray-400">Нет изображения</div>
         )}
-        <div className="absolute bottom-0 left-0 w-full bg-black text-white text-sm text-center py-2 opacity-0 group-hover:opacity-100 transition duration-300">
+        <button
+          onClick={handleAddToCart}
+          className="absolute bottom-0 left-0 w-full bg-black text-white text-sm text-center py-2 opacity-0 group-hover:opacity-100 transition duration-300"
+        >
           Add To Cart
-        </div>
+        </button>
       </div>
       <h3 className="text-sm font-semibold h-10 overflow-hidden leading-tight line-clamp-2">{title}</h3>
       <div className="text-red-500 font-bold">${price}</div>

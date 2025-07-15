@@ -82,9 +82,7 @@ export default function Checkout() {
     }
   };
 
-  const total = cartItems.reduce((sum, item) => {
-    return sum + item.product.price * item.quantity;
-  }, 0);
+  const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
     <section className="max-w-7xl mx-auto px-4 py-12 grid md:grid-cols-2 gap-12">
@@ -171,7 +169,10 @@ export default function Checkout() {
                 <p className="font-medium">{item.product.title}</p>
                 <p className="text-sm text-gray-500">x{item.quantity}</p>
               </div>
-              <span className="font-semibold">${item.product.price * item.quantity}</span>
+              <span>${item.price}</span>
+              {Number(item.price) < Number(item.product.price) && (
+                <span className="text-gray-500 text-sm line-through ml-2">${item.product.price}</span>
+              )}
             </div>
           ))}
         </div>

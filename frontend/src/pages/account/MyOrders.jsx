@@ -146,9 +146,13 @@ export default function MyOrders() {
                     {Array.isArray(order.order_items) &&
                       order.order_items.map((item) => (
                         <li key={item.id}>
-                          {item.product?.name || "Product"} — {item.quantity} x ${item.price}
+                          {item.product?.title || "Product"} — {item.quantity} x
+                          <span className="text-red-500 font-bold ml-1">${item.price}</span>
+                          {Number(item.price) < Number(item.product.price) && (
+                            <span className="text-gray-500 text-sm line-through ml-2">${item.product.price}</span>
+                          )}
                           <img
-                            src={`/storage/${item.product.image}`}
+                            src={`/${item.product.image}`}
                             alt={item.product?.title}
                             className="w-20 h-20 object-cover rounded"
                           />

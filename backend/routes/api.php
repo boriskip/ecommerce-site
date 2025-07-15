@@ -31,11 +31,11 @@ use App\Http\Controllers\Admin\HeroController as AdminHeroController;
 Route::post('/register', [RegisteredUserController::class, 'store']);
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 Route::get('/products/public', [ProductController::class, 'publicIndex']);
-Route::get('/benefits', [BenefitsController::class, 'index']); // Публичный доступ к Benefits
-Route::get('/new-arrivals', [NewArrivalsController::class, 'index']); // Публичный доступ к New Arrivals
-Route::get('/footer', [FooterController::class, 'index']); // Публичный доступ к Footer
-Route::get('/header', [HeaderController::class, 'index']); // Публичный доступ к Header
-Route::get('/hero', [HeroController::class, 'index']); // Публичный доступ к Hero
+Route::get('/benefits', [BenefitsController::class, 'index']); 
+Route::get('/new-arrivals', [NewArrivalsController::class, 'index']); 
+Route::get('/footer', [FooterController::class, 'index']); 
+Route::get('/header', [HeaderController::class, 'index']); 
+Route::get('/hero', [HeroController::class, 'index']); 
 Route::get('/flash-sales', [\App\Http\Controllers\FlashSaleController::class, 'index']);
 Route::get('/sanctum/csrf-cookie', function () {
     return response()->json(['csrf' => 'ok']);

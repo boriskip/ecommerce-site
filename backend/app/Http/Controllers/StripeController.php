@@ -31,7 +31,7 @@ public function createCheckoutSession(Request $request)
                 'product_data' => [
                     'name' => $item->product->title,
                 ],
-                'unit_amount' => intval($item->product->price * 100), // cents
+                'unit_amount' => intval($item->price * 100), // ← БЕРЁТСЯ ЦЕНА ИЗ КОРЗИНЫ!
             ],
             'quantity' => $item->quantity,
         ];
