@@ -28,7 +28,6 @@ class FlashSaleController extends Controller
             'reviews' => 'required|integer|min:0',
             'starts_at' => 'required|date',
             'ends_at' => 'required|date|after:starts_at',
-            // 'image' => 'nullable', // если не нужен баннер, можно убрать
         ]);
 
         if ($data['price'] != round($data['old_price'] - ($data['old_price'] * $data['discount'] / 100), 2)) {
@@ -60,6 +59,9 @@ class FlashSaleController extends Controller
             'starts_at' => 'required|date',
             'ends_at' => 'required|date|after:starts_at',
         ]);
+        if ($data['price'] != round($data['old_price'] - ($data['old_price'] * $data['discount'] / 100), 2)) {
+            return response()->json(['message' => 'Цена не соответствует скидке'], 422);
+        }
         $flashSale->update($data);
         return response()->json($flashSale->load('product'));
     }

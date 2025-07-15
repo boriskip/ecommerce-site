@@ -19,6 +19,7 @@ class FlashSale extends Model
         'reviews',
         'starts_at',
         'ends_at',
+
     ];
 
     public function product()

@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
 import axiosPrivate from '../../../api/axiosPrivate';
 import AddFlashSaleModal from '../modals/FlashSales/AddFlashSaleModal';
+import EditFlashSaleModal from '../modals/FlashSales/EditFlahModal';
 
 export default function FlashSalesList() {
     const [flashSales, setFlashSales] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showAddModal, setShowAddModal] = useState(false);
     const [error, setError] = useState('');
+    const [editModalOpen, setEditModalOpen] = useState(false);
+    const [editingSale, setEditingSale] = useState(null);
 
     useEffect(() => {
         fetchFlashSales();
@@ -32,6 +35,21 @@ export default function FlashSalesList() {
         setFlashSales([newSale, ...flashSales]);
     }
 
+    async function handleDelete(id) {
+        if (!window.confirm('Удалить этот Flash Sale?')) return;
+        try {
+            await axiosPrivate.delete(`/api/admin/flash-sales/${id}`);
+            setFlashSales(flashSales.filter(fs => fs.id !== id));
+        } catch (e) {
+            alert('Ошибка при удалении');
+        }
+    }
+
+    function openEditModal(fs) {
+        setEditingSale(fs);
+        setEditModalOpen(true);
+    }
+
     return (
         <div className="bg-white rounded shadow p-4 mb-8">
             <div className="flex justify-between items-center mb-4">
@@ -42,6 +60,7 @@ export default function FlashSalesList() {
                 >
                     + Добавить Flash Sale
                 </button>
+
             </div>
             {error && <div className="text-red-500 mb-2">{error}</div>}
             {loading ? (
@@ -53,6 +72,7 @@ export default function FlashSalesList() {
                     <thead>
                         <tr className="bg-gray-100">
                             <th className="p-2 border">ID</th>
+                            <th className="p-2 border">Изображение</th>
                             <th className="p-2 border">Продукт</th>
                             <th className="p-2 border">Цена</th>
                             <th className="p-2 border">Старая цена</th>
@@ -61,6 +81,7 @@ export default function FlashSalesList() {
                             <th className="p-2 border">Отзывы</th>
                             <th className="p-2 border">Начало</th>
                             <th className="p-2 border">Окончание</th>
+                            <th className="p-2 border">Удалить</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -68,9 +89,9 @@ export default function FlashSalesList() {
                             <tr key={fs.id}>
                                 <td className="p-2 border">{fs.id}</td>
                                 <td className="p-2 border">
-                                    {fs.image && (
+                                    {fs.product.image && (
                                         <img
-                                            src={`/storage/flash-sales/${fs.image.split('/').pop()}`}
+                                            src={`/${fs.product.image}`}
                                             alt=""
                                             style={{ width: 48, height: 48, objectFit: 'cover' }}
                                         />
@@ -82,12 +103,38 @@ export default function FlashSalesList() {
                                 <td className="p-2 border">{fs.discount}%</td>
                                 <td className="p-2 border">{fs.rating}</td>
                                 <td className="p-2 border">{fs.reviews}</td>
+
                                 <td className="p-2 border">{fs.starts_at?.replace('T', ' ').slice(0, 16)}</td>
                                 <td className="p-2 border">{fs.ends_at?.replace('T', ' ').slice(0, 16)}</td>
+
+                                <td className="p-2 border">
+                                    <button
+                                        onClick={() => openEditModal(fs)}
+                                        className="bg-yellow-500 text-white px-2 py-1 rounded"
+                                    >
+                                        Редактировать
+                                    </button>
+                                </td>
+                                <td className="p-2 border">
+                                    <button
+                                        onClick={() => handleDelete(fs.id)}
+                                        className="bg-red-500 text-white px-2 py-1 rounded"
+                                    >
+                                        Удалить
+                                    </button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
+            )}
+            {editModalOpen && (
+                <EditFlashSaleModal
+                    isOpen={editModalOpen}
+                    onClose={() => setEditModalOpen(false)}
+                    onSuccess={fetchFlashSales}
+                    flashSale={editingSale}
+                />
             )}
             {showAddModal && (
                 <AddFlashSaleModal
