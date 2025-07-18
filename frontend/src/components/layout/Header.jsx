@@ -5,8 +5,11 @@ import { Menu, X, Heart, ShoppingCart, User } from 'lucide-react';
 import useCart from '../../hooks/useCart';
 import useNotifications from '@/hooks/useNotifications';
 import axiosPublic from '../../api/axiosPublick';
+import { useNavigate } from 'react-router-dom';
 
 export default function Header() {
+  const navigate = useNavigate();
+  const [search, setSearch] = useState('');
   const { cartQuantity } = useCart();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef();
@@ -14,6 +17,15 @@ export default function Header() {
   const { count } = useNotifications();
   const [headerData, setHeaderData] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (search.trim()) {
+      navigate(`/search?q=${encodeURIComponent(search)}`);
+    }
+  };
+
+
 
   useEffect(() => {
     const fetchHeaderData = async () => {
@@ -133,11 +145,15 @@ export default function Header() {
         </Link>
 
         <div className="flex-1 mx-4">
-          <input
-            type="text"
-            placeholder={headerData.search_placeholder}
-            className="w-full px-4 py-2 border rounded-md text-sm"
-          />
+          <form onSubmit={handleSearch} className="relative">
+            <input
+              type="text"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder={headerData.search_placeholder}
+              className="w-full px-4 py-2 border rounded-md text-sm"
+            />
+          </form>
         </div>
 
         {/* Навигация (десктоп) */}

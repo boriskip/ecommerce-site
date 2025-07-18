@@ -23,7 +23,7 @@ import AdminLogin from "../components/Admin/AdminLogin.jsx";
 import ProtectedRoute from '../components/ProtectedRoute';
 import AdminDashboard from "../components/Admin/dashboard/AdminDashboard.jsx";
 import SuccessPage from "../pages/SuccessPage";
-
+import SearchResults from "../pages/SearchResults";
 
 export default function RouterView({ user, setUser }) {
   return (
@@ -52,6 +52,7 @@ export default function RouterView({ user, setUser }) {
         <Route path="wishlist" element={<MyWishlist />} />
       </Route>
 
+      <Route path="/search" element={<SearchResults />} />
 
       <Route path="/admin/*" element={<AdminLayout />}>
         <Route path="login" element={<AdminLogin setUser={setUser} />} />
